@@ -1,0 +1,8 @@
+rootProject.name = 'its'
+
+include('event-sourcing-core')
+include('issue-tracking-app:command')
+include('issue-tracking-app:query')
+include('user-management')
+include('api')
+include('runner')

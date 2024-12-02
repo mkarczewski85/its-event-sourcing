@@ -1,0 +1,44 @@
+[versions]
+spring-boot = "3.4.0"
+lombok = "1.18.30"
+liquibase = "4.25.0"
+jwt = "0.12.3"
+dependency-management = "1.1.4"
+postgresql = "42.7.2"
+spring-docs = "2.3.0"
+junit-version = "5.10.1"
+jackson-version = "2.18.1"
+
+[libraries]
+# spring
+spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter", version.ref = "spring-boot" }
+spring-boot-jdbc = { module = "org.springframework.boot:spring-boot-starter-jdbc", version.ref = "spring-boot" }
+spring-boot-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
+spring-boot-data = { module = "org.springframework.boot:spring-boot-starter-data-jpa", version.ref = "spring-boot" }
+spring-boot-security = { module = "org.springframework.boot:spring-boot-starter-security", version.ref = "spring-boot" }
+spring-boot-mail = { module = "org.springframework.boot:spring-boot-starter-mail", version.ref = "spring-boot" }
+spring-boot-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "spring-boot" }
+spring-rest-docs = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "spring-docs" }
+spring-boot-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
+
+junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit-version" }
+junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-version" }
+
+# other
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+liquibase-core = { module = "org.liquibase:liquibase-core", version.ref = "liquibase" }
+postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+jwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jwt" }
+jwt-impl = { module = "io.jsonwebtoken:jjwt-impl ", version.ref = "jwt" }
+jwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jwt" }
+jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson-version" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson-version" }
+
+[bundles]
+junit = ["junit-api", "junit-engine"]
+jwt = ["jwt-api", "jwt-impl", "jwt-jackson"]
+jackson = ["jackson-annotations", "jackson-databind"]
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "dependency-management" }

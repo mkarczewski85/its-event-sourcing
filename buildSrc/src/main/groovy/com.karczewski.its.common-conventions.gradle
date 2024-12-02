@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+}
+
+java {
+    sourceCompatibility = '21'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor libs.lombok
+    compileOnly libs.lombok
+}

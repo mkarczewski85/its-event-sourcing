@@ -1,0 +1,12 @@
+plugins {
+    id 'java-library'
+    id 'com.karczewski.its.common-conventions'
+}
+
+dependencies {
+    implementation project(':event-sourcing-core')
+    implementation project(':issue-tracking-app:query')
+
+    implementation libs.spring.boot.starter
+    implementation libs.bundles.jackson
+}
