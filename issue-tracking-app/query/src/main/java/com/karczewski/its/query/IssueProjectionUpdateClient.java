@@ -3,7 +3,7 @@ package com.karczewski.its.query;
 import com.karczewski.its.query.dto.IssueCommentDto;
 import com.karczewski.its.query.dto.IssueProjectionDto;
 
-public interface IssueProjectionClient {
+public interface IssueProjectionUpdateClient {
 
     void updateIssueProjection(IssueProjectionDto dto);
 

@@ -7,7 +7,7 @@ import com.karczewski.its.es.core.domain.aggregate.Aggregate;
 import com.karczewski.its.es.core.domain.event.Event;
 import com.karczewski.its.es.core.domain.event.EventWithId;
 import com.karczewski.its.es.core.service.event.SyncEventHandler;
-import com.karczewski.its.query.IssueProjectionClient;
+import com.karczewski.its.query.IssueProjectionUpdateClient;
 import com.karczewski.its.query.dto.IssueCommentDto;
 import com.karczewski.its.query.dto.IssueProjectionDto;
 import jakarta.annotation.Nonnull;
@@ -22,7 +22,7 @@ import java.util.List;
 @Slf4j
 public class IssueReadModelUpdater implements SyncEventHandler {
 
-    private final IssueProjectionClient issueProjectionClient;
+    private final IssueProjectionUpdateClient issueProjectionClient;
 
     @Override
     public void handleEvents(List<EventWithId<Event>> events, Aggregate aggregate) {

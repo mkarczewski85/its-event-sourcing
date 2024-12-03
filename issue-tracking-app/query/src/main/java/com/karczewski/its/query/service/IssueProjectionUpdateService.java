@@ -1,6 +1,6 @@
 package com.karczewski.its.query.service;
 
-import com.karczewski.its.query.IssueProjectionClient;
+import com.karczewski.its.query.IssueProjectionUpdateClient;
 import com.karczewski.its.query.dto.IssueCommentDto;
 import com.karczewski.its.query.dto.IssueProjectionDto;
 import com.karczewski.its.query.entity.IssueComment;
@@ -12,15 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class IssueProjectionService implements IssueProjectionClient {
+public class IssueProjectionUpdateService implements IssueProjectionUpdateClient {
 
     private final IssueProjectionRepository issueProjectionRepository;
 
     @Override
     @Transactional
     public void updateIssueProjection(IssueProjectionDto dto) {
-        IssueProjection issueProjection = issueProjectionRepository.findByUuid(dto.issueUuid())
-                .orElse(IssueProjection.newProjection(dto.issueUuid()));
+        IssueProjection issueProjection = issueProjectionRepository.findByUuid(dto.uuid())
+                .orElse(IssueProjection.newProjection(dto.uuid()));
         issueProjection.setTitle(dto.title());
         issueProjection.setDescription(dto.description());
         issueProjection.setStatus(dto.status());
