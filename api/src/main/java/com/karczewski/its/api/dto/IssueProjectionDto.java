@@ -1,4 +1,4 @@
-package com.karczewski.its.query.dto;
+package com.karczewski.its.api.dto;
 
 import lombok.Builder;
 

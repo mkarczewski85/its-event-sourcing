@@ -4,5 +4,5 @@ plugins {
 }
 
 dependencies {
-    implementation libs.spring.boot.data
+    api libs.spring.boot.data
 }

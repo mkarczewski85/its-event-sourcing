@@ -8,8 +8,8 @@ import com.karczewski.its.es.core.domain.event.Event;
 import com.karczewski.its.es.core.domain.event.EventWithId;
 import com.karczewski.its.es.core.service.event.SyncEventHandler;
 import com.karczewski.its.query.IssueProjectionUpdateClient;
-import com.karczewski.its.query.dto.IssueCommentDto;
-import com.karczewski.its.query.dto.IssueProjectionDto;
+import com.karczewski.its.query.model.IssueCommentModel;
+import com.karczewski.its.query.model.IssueProjectionUpdateModel;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,12 +27,13 @@ public class IssueReadModelUpdater implements SyncEventHandler {
     @Override
     public void handleEvents(List<EventWithId<Event>> events, Aggregate aggregate) {
         log.debug("Updating read model for an issue {}", aggregate);
-        IssueProjectionDto issueProjectionDto = mapToDto(CastingUtility.safeCast(aggregate, IssueAggregate.class));
-        issueProjectionClient.updateIssueProjection(issueProjectionDto);
+        IssueProjectionUpdateModel issueProjectionUpdateModel =
+                mapToModel(CastingUtility.safeCast(aggregate, IssueAggregate.class));
+        issueProjectionClient.updateIssueProjection(issueProjectionUpdateModel);
         events.stream()
                 .map(EventWithId::event)
                 .filter(event -> event.isTypeOf(IssueCommentedEvent.class.getTypeName()))
-                .map(event -> mapToDto(CastingUtility.safeCast(event, IssueCommentedEvent.class)))
+                .map(event -> mapToModel(CastingUtility.safeCast(event, IssueCommentedEvent.class)))
                 .forEach(issueProjectionClient::addIssueComment);
     }
 
@@ -42,8 +43,8 @@ public class IssueReadModelUpdater implements SyncEventHandler {
         return AggregateType.ISSUE.toString();
     }
 
-    private static IssueProjectionDto mapToDto(IssueAggregate aggregate) {
-        return IssueProjectionDto.builder()
+    private static IssueProjectionUpdateModel mapToModel(IssueAggregate aggregate) {
+        return IssueProjectionUpdateModel.builder()
                 .uuid(aggregate.getAggregateId())
                 .title(aggregate.getIssueTitle().value())
                 .description(aggregate.getIssueDescription().value())
@@ -56,8 +57,8 @@ public class IssueReadModelUpdater implements SyncEventHandler {
                 .build();
     }
 
-    private static IssueCommentDto mapToDto(IssueCommentedEvent event) {
-        return IssueCommentDto.builder()
+    private static IssueCommentModel mapToModel(IssueCommentedEvent event) {
+        return IssueCommentModel.builder()
                 .issueUuid(event.getAggregateId())
                 .content(event.getComment())
                 .authoredBy(event.getAuthoredBy())

@@ -1,4 +1,4 @@
-package com.karczewski.its.query.dto.pagination;
+package com.karczewski.its.api.dto.pagination;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

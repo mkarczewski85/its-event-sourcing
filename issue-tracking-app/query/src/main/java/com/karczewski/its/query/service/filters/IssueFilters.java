@@ -1,4 +1,4 @@
-package com.karczewski.its.query.dto.pagination;
+package com.karczewski.its.query.service.filters;
 
 import lombok.*;
 

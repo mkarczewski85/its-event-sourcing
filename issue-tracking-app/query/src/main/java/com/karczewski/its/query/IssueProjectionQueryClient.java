@@ -1,10 +1,9 @@
 package com.karczewski.its.query;
 
-import com.karczewski.its.query.dto.IssueCommentDto;
-import com.karczewski.its.query.dto.IssueProjectionDisplayItemDto;
-import com.karczewski.its.query.dto.pagination.IssueFilters;
-import com.karczewski.its.query.dto.pagination.PageWrapper;
+import com.karczewski.its.query.entity.IssueComment;
 import com.karczewski.its.query.entity.IssueProjection;
+import com.karczewski.its.query.service.filters.IssueFilters;
+import org.springframework.data.domain.Page;
 
 import java.util.UUID;
 
@@ -12,10 +11,10 @@ public interface IssueProjectionQueryClient {
 
     IssueProjection getIssueProjection(UUID uuid);
 
-    PageWrapper<IssueProjectionDisplayItemDto> getAssignedIssues(IssueFilters filters, int offset, int limit);
+    Page<IssueProjection> getAssignedIssues(IssueFilters filters, int offset, int limit);
 
-    PageWrapper<IssueProjectionDisplayItemDto> getReportedIssues(IssueFilters filters, int offset, int limit);
+    Page<IssueProjection> getReportedIssues(IssueFilters filters, int offset, int limit);
 
-    PageWrapper<IssueCommentDto> getIssueComments(UUID uuid, int offset, int limit);
+    Page<IssueComment> getIssueComments(UUID uuid, int offset, int limit);
 
 }

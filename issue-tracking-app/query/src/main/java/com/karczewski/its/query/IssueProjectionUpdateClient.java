@@ -1,12 +1,12 @@
 package com.karczewski.its.query;
 
-import com.karczewski.its.query.dto.IssueCommentDto;
-import com.karczewski.its.query.dto.IssueProjectionDto;
+import com.karczewski.its.query.model.IssueCommentModel;
+import com.karczewski.its.query.model.IssueProjectionUpdateModel;
 
 public interface IssueProjectionUpdateClient {
 
-    void updateIssueProjection(IssueProjectionDto dto);
+    void updateIssueProjection(IssueProjectionUpdateModel model);
 
-    void addIssueComment(IssueCommentDto dto);
+    void addIssueComment(IssueCommentModel model);
 
 }
