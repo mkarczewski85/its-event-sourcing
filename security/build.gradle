@@ -1,0 +1,18 @@
+plugins {
+    id 'java-library'
+    id 'com.karczewski.its.common-conventions'
+}
+
+dependencies {
+
+    implementation project(':user-management')
+
+    implementation libs.spring.boot.security
+    implementation libs.spring.boot.web
+    implementation libs.spring.boot.validation
+    implementation libs.spring.rest.docs
+
+    implementation libs.jwt.api
+    runtimeOnly libs.jwt.impl
+    runtimeOnly libs.jwt.jackson
+}
