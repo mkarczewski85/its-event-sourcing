@@ -2,3 +2,8 @@ plugins {
     id 'java-library'
     id 'com.karczewski.its.common-conventions'
 }
+
+dependencies {
+    implementation libs.spring.boot.data
+    implementation libs.spring.boot.validation
+}
