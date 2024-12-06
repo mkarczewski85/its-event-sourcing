@@ -1,8 +1,10 @@
 package com.karczewski.its.api.query.mapper;
 
+import com.karczewski.its.api.query.dto.response.IssueCommentDto;
 import com.karczewski.its.api.query.dto.response.IssueProjectionDto;
 import com.karczewski.its.api.query.dto.response.IssueProjectionItemDto;
 import com.karczewski.its.api.query.dto.response.UserDto;
+import com.karczewski.its.query.entity.IssueComment;
 import com.karczewski.its.query.entity.IssueProjection;
 import com.karczewski.its.query.service.filters.IssueFilters;
 import com.karczewski.its.security.authentication.AuthenticationClient;
@@ -42,6 +44,14 @@ public class QueryMappingComponent {
                 .type(issueProjection.getType())
                 .severity(issueProjection.getSeverity())
                 .reportedAt(issueProjection.getReportedAt())
+                .build();
+    }
+
+    public IssueCommentDto toDto(IssueComment issueComment) {
+        return IssueCommentDto.builder()
+                .content(issueComment.getContent())
+                .authoredBy(toDto(issueComment.getAuthoredBy()))
+                .publishedAt(issueComment.getPublishedAt())
                 .build();
     }
 
