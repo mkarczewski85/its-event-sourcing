@@ -4,5 +4,8 @@ plugins {
 }
 
 dependencies {
+    implementation project(':user-management')
+    implementation project(':security')
+
     api libs.spring.boot.data
 }

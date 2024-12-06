@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
-public record IssueDto(
+public record IssueProjectionDto(
     UUID uuid,
     String title,
     String description,
@@ -14,7 +14,7 @@ public record IssueDto(
     String severity,
     String type,
     LocalDateTime reportedAt,
-    UUID reportedBy,
-    UUID assignedTo
+    UserDto reportedBy,
+    UserDto assignedTo
 ) {
 }

@@ -59,7 +59,7 @@ public class IssueCommandController {
     @PostMapping("/{uuid/assign}")
     @PreAuthorize("hasRole('ROLE_TECHNICIAN')")
     public IssueCommandResponseDto assignIssue(@PathVariable final UUID uuid,
-                            @RequestBody @Valid @NotNull final AssignIssueRequestDto request) {
+                                               @RequestBody @Valid @NotNull final AssignIssueRequestDto request) {
         request.setUuid(uuid);
         Command commands = commandMappingComponent.toCommand(request);
         Aggregate aggregate = commandProcessor.process(commands);

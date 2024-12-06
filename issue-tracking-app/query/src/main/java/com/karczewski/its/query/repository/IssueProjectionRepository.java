@@ -16,5 +16,4 @@ public interface IssueProjectionRepository extends CrudRepository<IssueProjectio
 
     Optional<IssueProjection> findByUuid(UUID uuid);
 
-
 }

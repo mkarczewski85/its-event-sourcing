@@ -20,7 +20,7 @@ public class IssueProjection {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "uuid", nullable = false)
+    @Column(name = "projectionUuid", nullable = false)
     private UUID uuid;
 
     @Column(name = "summary", nullable = false)
