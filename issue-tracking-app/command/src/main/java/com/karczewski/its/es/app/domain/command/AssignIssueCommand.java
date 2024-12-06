@@ -1,5 +1,6 @@
 package com.karczewski.its.es.app.domain.command;
 
+import com.karczewski.its.es.app.domain.aggregate.AggregateType;
 import com.karczewski.its.es.core.domain.command.Command;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,15 +12,13 @@ import java.util.UUID;
 @ToString(callSuper = true)
 public final class AssignIssueCommand extends Command {
 
-    private final String assignedTo;
+    private final UUID assignedTo;
+    private final UUID assignedBy;
 
     @Builder
-    public AssignIssueCommand(String aggregateType, UUID aggregateId, String assignedTo) {
-        super(aggregateType, aggregateId);
+    public AssignIssueCommand(UUID aggregateId, UUID assignedTo, UUID assignedBy) {
+        super(AggregateType.ISSUE.toString(), aggregateId);
         this.assignedTo = assignedTo;
-    }
-
-    public UUID getAssignedTo() {
-        return UUID.fromString(assignedTo);
+        this.assignedBy = assignedBy;
     }
 }

@@ -1,5 +1,6 @@
 package com.karczewski.its.es.app.domain.command;
 
+import com.karczewski.its.es.app.domain.aggregate.AggregateType;
 import com.karczewski.its.es.core.domain.command.Command;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,17 +16,15 @@ public final class ReportIssueCommand extends Command {
     private final String issueDescription;
     private final String issueSeverity;
     private final String issueType;
-    private final String reportedBy;
+    private final UUID reportedBy;
 
     @Builder
-    public ReportIssueCommand(String aggregateType,
-                              UUID aggregateId,
-                              String issueTitle,
+    public ReportIssueCommand(String issueTitle,
                               String issueDescription,
                               String issueSeverity,
                               String issueType,
-                              String reportedBy) {
-        super(aggregateType, aggregateId);
+                              UUID reportedBy) {
+        super(AggregateType.ISSUE.toString(), generateAggregateId());
         this.issueTitle = issueTitle;
         this.issueDescription = issueDescription;
         this.issueSeverity = issueSeverity;
@@ -33,7 +32,7 @@ public final class ReportIssueCommand extends Command {
         this.reportedBy = reportedBy;
     }
 
-    public UUID getReportedBy() {
-        return UUID.fromString(reportedBy);
+    private static UUID generateAggregateId() {
+        return UUID.randomUUID();
     }
 }

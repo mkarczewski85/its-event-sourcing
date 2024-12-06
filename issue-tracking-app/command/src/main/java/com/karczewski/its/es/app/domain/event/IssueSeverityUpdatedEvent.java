@@ -13,11 +13,13 @@ import java.util.UUID;
 public class IssueSeverityUpdatedEvent extends Event {
 
     private final String issueSeverity;
+    private final UUID updatedBy;
 
     @Builder
-    public IssueSeverityUpdatedEvent(UUID aggregateId, int version, String issueSeverity) {
+    public IssueSeverityUpdatedEvent(UUID aggregateId, int version, String issueSeverity, UUID updatedBy) {
         super(aggregateId, version);
         this.issueSeverity = issueSeverity;
+        this.updatedBy = updatedBy;
     }
 
     @Nonnull

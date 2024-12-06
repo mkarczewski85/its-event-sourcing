@@ -3,6 +3,7 @@ package com.karczewski.its.es.app.service.event;
 import com.karczewski.its.es.app.domain.aggregate.AggregateType;
 import com.karczewski.its.es.app.domain.aggregate.IssueAggregate;
 import com.karczewski.its.es.app.domain.event.IssueCommentedEvent;
+import com.karczewski.its.es.app.service.utility.CastingUtility;
 import com.karczewski.its.es.core.domain.aggregate.Aggregate;
 import com.karczewski.its.es.core.domain.event.Event;
 import com.karczewski.its.es.core.domain.event.EventWithId;

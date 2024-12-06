@@ -29,6 +29,8 @@ public interface UserClient {
 
     void deactivateUser(UUID uuid);
 
+    boolean existsByUUIDAndRole(UUID uuid, UserRole role);
+
     boolean isPasswordValid(UserCredentials userCredentials, String password);
 
 }

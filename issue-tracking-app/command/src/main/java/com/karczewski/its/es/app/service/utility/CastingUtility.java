@@ -1,4 +1,4 @@
-package com.karczewski.its.es.app.service.event;
+package com.karczewski.its.es.app.service.utility;
 
 public final class CastingUtility {
 

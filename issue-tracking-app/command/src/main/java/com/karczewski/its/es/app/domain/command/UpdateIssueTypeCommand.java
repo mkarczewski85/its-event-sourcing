@@ -1,5 +1,6 @@
 package com.karczewski.its.es.app.domain.command;
 
+import com.karczewski.its.es.app.domain.aggregate.AggregateType;
 import com.karczewski.its.es.core.domain.command.Command;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,10 +13,12 @@ import java.util.UUID;
 public final class UpdateIssueTypeCommand extends Command {
 
     private final String issueType;
+    private final UUID updatedBy;
 
     @Builder
-    public UpdateIssueTypeCommand(String aggregateType, UUID aggregateId, String issueType) {
-        super(aggregateType, aggregateId);
+    public UpdateIssueTypeCommand(UUID aggregateId, String issueType, UUID updatedBy) {
+        super(AggregateType.ISSUE.toString(), aggregateId);
         this.issueType = issueType;
+        this.updatedBy = updatedBy;
     }
 }

@@ -13,12 +13,13 @@ import java.util.UUID;
 @ToString(callSuper = true)
 public class IssueCancelledEvent extends Event {
 
-    // TODO
+    private final UUID cancelledBy;
 
     @JsonCreator
     @Builder
-    public IssueCancelledEvent(UUID aggregateId, int version) {
+    public IssueCancelledEvent(UUID aggregateId, int version, UUID cancelledBy) {
         super(aggregateId, version);
+        this.cancelledBy = cancelledBy;
     }
 
     @Nonnull

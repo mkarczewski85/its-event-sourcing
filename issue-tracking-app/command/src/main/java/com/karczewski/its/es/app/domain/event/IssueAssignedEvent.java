@@ -14,12 +14,14 @@ import java.util.UUID;
 public class IssueAssignedEvent extends Event {
 
     private final UUID assignedTo;
+    private final UUID assignedBy;
 
     @JsonCreator
     @Builder
-    public IssueAssignedEvent(UUID aggregateId, int version, UUID assignedTo) {
+    public IssueAssignedEvent(UUID aggregateId, int version, UUID assignedTo, UUID assignedBy) {
         super(aggregateId, version);
         this.assignedTo = assignedTo;
+        this.assignedBy = assignedBy;
     }
 
     @Nonnull

@@ -13,11 +13,13 @@ import java.util.UUID;
 public class IssueTypeUpdatedEvent extends Event {
 
     private final String issueType;
+    private final UUID updatedBy;
 
     @Builder
-    public IssueTypeUpdatedEvent(UUID aggregateId, int version, String issueType) {
+    public IssueTypeUpdatedEvent(UUID aggregateId, int version, String issueType, UUID updatedBy) {
         super(aggregateId, version);
         this.issueType = issueType;
+        this.updatedBy = updatedBy;
     }
 
     @Nonnull

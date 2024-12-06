@@ -7,7 +7,7 @@ dependencies {
 
     implementation project(':user-management')
 
-    implementation libs.spring.boot.security
+    api libs.spring.boot.security
     implementation libs.spring.boot.web
     implementation libs.spring.boot.validation
     implementation libs.spring.rest.docs

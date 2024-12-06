@@ -7,6 +7,8 @@ import com.karczewski.its.user.dto.UserFilters;
 import com.karczewski.its.user.entity.UserAccount;
 import com.karczewski.its.user.entity.UserCredentials;
 import com.karczewski.its.user.entity.UserRole;
+import com.karczewski.its.user.repository.UserAccountRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +16,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class UserService implements UserClient {
+
+    private final UserAccountRepository userAccountRepository;
+
     @Override
     public Page<UserAccount> getUsers(UserFilters filters, int offset, int limit) {
         return null;
@@ -53,6 +59,11 @@ public class UserService implements UserClient {
     @Override
     public void deactivateUser(UUID uuid) {
 
+    }
+
+    @Override
+    public boolean existsByUUIDAndRole(UUID uuid, UserRole role) {
+        return userAccountRepository.existsByUuidAndRoleAndActive(uuid, role, true);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.karczewski.its.es.app.domain.command;
 
+import com.karczewski.its.es.app.domain.aggregate.AggregateType;
 import com.karczewski.its.es.core.domain.command.Command;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,17 +13,13 @@ import java.util.UUID;
 public final class CommentIssueCommand extends Command {
 
     private final String comment;
-    private final String authoredBy;
+    private final UUID authoredBy;
 
     @Builder
-    public CommentIssueCommand(String aggregateType, UUID aggregateId, String comment, String authoredBy) {
-        super(aggregateType, aggregateId);
+    public CommentIssueCommand(UUID aggregateId, String comment, UUID authoredBy) {
+        super(AggregateType.ISSUE.toString(), aggregateId);
         this.comment = comment;
         this.authoredBy = authoredBy;
-    }
-
-    public UUID getAuthoredBy() {
-        return UUID.fromString(authoredBy);
     }
 
 }

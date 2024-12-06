@@ -54,6 +54,7 @@ public class IssueAggregate extends Aggregate {
                     .aggregateId(aggregateId)
                     .version(getVersion())
                     .assignedTo(command.getAssignedTo())
+                    .assignedBy(command.getAssignedBy())
                     .build());
         } else {
             throw new AggregateStateException("This issue cannot be assigned.");
@@ -65,6 +66,7 @@ public class IssueAggregate extends Aggregate {
             applyChange(IssueAcceptedEvent.builder()
                     .aggregateId(aggregateId)
                     .version(getVersion())
+                    .acceptedBy(command.getAcceptedBy())
                     .build());
         } else {
             throw new AggregateStateException("This issue cannot be accepted.");
@@ -76,6 +78,7 @@ public class IssueAggregate extends Aggregate {
             applyChange(IssueRejectedEvent.builder()
                     .aggregateId(aggregateId)
                     .version(getVersion())
+                    .rejectedBy(command.getRejectedBy())
                     .build());
         } else {
             throw new AggregateStateException("This issue cannot be rejected.");
@@ -87,6 +90,7 @@ public class IssueAggregate extends Aggregate {
             applyChange(IssueCancelledEvent.builder()
                     .aggregateId(aggregateId)
                     .version(getVersion())
+                    .cancelledBy(command.getCancelledBy())
                     .build());
         } else {
             throw new AggregateStateException("This issue cannot be cancelled.");
@@ -98,6 +102,7 @@ public class IssueAggregate extends Aggregate {
             applyChange(IssueResolvedEvent.builder()
                     .aggregateId(aggregateId)
                     .version(getVersion())
+                    .resolvedBy(command.getResolvedBy())
                     .build());
         } else {
             throw new AggregateStateException("This issue cannot be resolved.");
@@ -113,6 +118,7 @@ public class IssueAggregate extends Aggregate {
                 .aggregateId(aggregateId)
                 .version(getVersion())
                 .issueSeverity(command.getIssueSeverity())
+                .updatedBy(command.getUpdatedBy())
                 .build());
     }
 
@@ -125,6 +131,7 @@ public class IssueAggregate extends Aggregate {
                 .aggregateId(aggregateId)
                 .version(getVersion())
                 .issueType(command.getIssueType())
+                .updatedBy(command.getUpdatedBy())
                 .build());
     }
 
@@ -195,6 +202,14 @@ public class IssueAggregate extends Aggregate {
 
     private boolean isIssueUnassigned() {
         return this.assignedAt == null;
+    }
+
+    public boolean isAssignedTo(@NonNull UUID uuid) {
+        return uuid.equals(this.assignedTo.getId());
+    }
+
+    public boolean isReportedBy(@NonNull UUID uuid) {
+        return uuid.equals(this.reportedBy.getId());
     }
 
     @Nonnull
