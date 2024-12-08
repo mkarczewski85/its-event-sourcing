@@ -1,4 +1,4 @@
-package com.karczewski.its.job.utility;
+package com.karczewski.its.job.assigment.utility;
 
 import java.util.Iterator;
 import java.util.List;

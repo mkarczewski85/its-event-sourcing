@@ -1,6 +1,6 @@
 package com.karczewski.its.job.assigment;
 
-import com.karczewski.its.job.utility.CyclicIterator;
+import com.karczewski.its.job.assigment.utility.CyclicIterator;
 import com.karczewski.its.query.IssueProjectionQueryClient;
 import com.karczewski.its.query.entity.IssueProjection;
 import com.karczewski.its.query.entity.UserIssueCount;
@@ -21,7 +21,10 @@ public class IssueAssignmentJob {
     private final IssueAssigmentComponent issueAssigmentComponent;
     private final IssueProjectionQueryClient queryClient;
 
-    @Scheduled(fixedDelayString = "${issues.assigment.interval}", initialDelayString = "${issues.assigment.interval}")
+    @Scheduled(
+            fixedDelayString = "${issues.assigment.polling-interval}",
+            initialDelayString = "${issues.assigment.polling-initial-delay}"
+    )
     public void assignReportedIssues() {
         Collection<IssueProjection> allUnassigned = queryClient.getAllUnassignedIssues();
         if (allUnassigned.isEmpty()) {
