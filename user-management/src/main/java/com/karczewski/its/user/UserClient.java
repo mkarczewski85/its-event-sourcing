@@ -25,8 +25,6 @@ public interface UserClient {
 
     UserAccount getByUUID(UUID uuid);
 
-    UserAccount getRandomWith(UserRole role);
-
     void deactivateUser(UUID uuid);
 
     boolean existsByUUIDAndRole(UUID uuid, UserRole role);

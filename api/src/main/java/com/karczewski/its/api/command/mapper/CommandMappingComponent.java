@@ -30,7 +30,7 @@ public class CommandMappingComponent {
     }
 
     public Command toCommand(AssignIssueRequestDto request) {
-        return AssignIssueCommand.builder()
+        return ReassignIssueCommand.builder()
                 .aggregateId(request.getUuid())
                 .assignedBy(authenticationClient.getLoggedUserUuid())
                 .assignedTo(request.getAssignedTo())

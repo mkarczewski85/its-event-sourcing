@@ -42,11 +42,13 @@ public class IssueProjection {
     @Column(name = "reported_at", nullable = false)
     private LocalDateTime reportedAt;
 
-    @Column(name = "reported_by", nullable = false)
-    private UUID reportedBy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reported_by", nullable = false)
+    private User reportedBy;
 
-    @Column(name = "assigned_to")
-    private UUID assignedTo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_to")
+    private User assignedTo;
 
     @OneToMany(mappedBy = "issue", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @Builder.Default

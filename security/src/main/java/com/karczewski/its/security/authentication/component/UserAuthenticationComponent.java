@@ -46,7 +46,7 @@ public class UserAuthenticationComponent {
     private UserAuthentication createAuthentication(final UserAccount user, final String password) {
         final UserAuthentication authenticationToken = new UserAuthentication(user.getEmail(),
                 password, List.of(new SimpleGrantedAuthority(ROLE_PREFIX.concat(user.getRole().name()))));
-        authenticationToken.setId(user.getUuid().toString());
+        authenticationToken.setId(user.getId().toString());
         authenticationToken.setFirstName(user.getFirstName());
         authenticationToken.setLastName(user.getLastName());
         return authenticationToken;
@@ -54,7 +54,7 @@ public class UserAuthenticationComponent {
 
     private static LoggedUserDto toLoggedUserDTO(final UserAccount user) {
         return LoggedUserDto.builder()
-                .id(user.getUuid())
+                .id(user.getId())
                 .username(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())

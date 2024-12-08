@@ -10,11 +10,15 @@ import lombok.RequiredArgsConstructor;
 public enum EventType {
 
     ISSUE_REPORTED(IssueReportedEvent.class),
-    ISSUE_ACCEPTED(IssueAcceptedEvent.class),
     ISSUE_ASSIGNED(IssueAssignedEvent.class),
-    ISSUE_CANCELLED(IssueCancelledEvent.class),
+    ISSUE_ACCEPTED(IssueAcceptedEvent.class),
     ISSUE_REJECTED(IssueRejectedEvent.class),
-    ISSUE_RESOLVED(IssueResolvedEvent.class);
+    ISSUE_REASSIGNED(IssueReassignedEvent.class),
+    ISSUE_CANCELLED(IssueCancelledEvent.class),
+    ISSUE_RESOLVED(IssueResolvedEvent.class),
+    ISSUE_COMMENTED(IssueCommentedEvent.class),
+    ISSUE_SEVERITY_UPDATED(IssueSeverityUpdatedEvent.class),
+    ISSUE_TYPE_UPDATED(IssueTypeUpdatedEvent.class);
 
     private final Class<? extends Event> eventClass;
 

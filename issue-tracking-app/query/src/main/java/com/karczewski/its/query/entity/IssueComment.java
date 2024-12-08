@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "comments")
@@ -26,8 +25,9 @@ public class IssueComment {
     @Column(columnDefinition = "text", name = "content", nullable = false)
     private String content;
 
-    @Column(name = "authored_by", nullable = false)
-    private UUID authoredBy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "authored_by", nullable = false)
+    private User authoredBy;
 
     @Column(name = "published_at")
     private LocalDateTime publishedAt;

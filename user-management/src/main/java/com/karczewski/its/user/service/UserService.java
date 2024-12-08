@@ -52,11 +52,6 @@ public class UserService implements UserClient {
     }
 
     @Override
-    public UserAccount getRandomWith(UserRole role) {
-        return null;
-    }
-
-    @Override
     public void deactivateUser(UUID uuid) {
 
     }

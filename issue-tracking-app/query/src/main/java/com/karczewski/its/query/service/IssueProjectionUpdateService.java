@@ -6,6 +6,7 @@ import com.karczewski.its.query.entity.IssueProjection;
 import com.karczewski.its.query.model.IssueCommentModel;
 import com.karczewski.its.query.model.IssueProjectionUpdateModel;
 import com.karczewski.its.query.repository.IssueProjectionRepository;
+import com.karczewski.its.query.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class IssueProjectionUpdateService implements IssueProjectionUpdateClient {
 
     private final IssueProjectionRepository issueProjectionRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -26,8 +28,8 @@ public class IssueProjectionUpdateService implements IssueProjectionUpdateClient
         issueProjection.setStatus(model.status());
         issueProjection.setSeverity(model.severity());
         issueProjection.setType(model.type());
-        issueProjection.setReportedBy(model.reportedBy());
-        issueProjection.setAssignedTo(model.assignedTo());
+        issueProjection.setReportedBy(userRepository.getById(model.reportedBy()));
+        issueProjection.setAssignedTo(userRepository.getById(model.assignedTo()));
     }
 
     @Override
@@ -35,7 +37,7 @@ public class IssueProjectionUpdateService implements IssueProjectionUpdateClient
     public void addIssueComment(IssueCommentModel model) {
         IssueComment issueComment = IssueComment.builder()
                 .content(model.content())
-                .authoredBy(model.authoredBy())
+                .authoredBy(userRepository.getById(model.authoredBy()))
                 .publishedAt(model.publishedAt())
                 .build();
         IssueProjection issueProjection = issueProjectionRepository.findByUuid(model.issueUuid()).orElseThrow();

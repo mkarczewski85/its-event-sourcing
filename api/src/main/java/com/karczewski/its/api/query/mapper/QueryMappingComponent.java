@@ -6,10 +6,9 @@ import com.karczewski.its.api.query.dto.response.IssueProjectionItemDto;
 import com.karczewski.its.api.query.dto.response.UserDto;
 import com.karczewski.its.query.entity.IssueComment;
 import com.karczewski.its.query.entity.IssueProjection;
+import com.karczewski.its.query.entity.User;
 import com.karczewski.its.query.service.filters.IssueFilters;
 import com.karczewski.its.security.authentication.AuthenticationClient;
-import com.karczewski.its.user.UserClient;
-import com.karczewski.its.user.entity.UserAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +18,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class QueryMappingComponent {
 
-    private final UserClient userClient;
     private final AuthenticationClient authenticationClient;
 
     public IssueProjectionDto toDto(IssueProjection issueProjection) {
@@ -70,14 +68,13 @@ public class QueryMappingComponent {
                 .build();
     }
 
-    private UserDto toDto(UUID uuid) {
-        if (uuid == null) return null;
-        UserAccount userAccount = userClient.getByUUID(uuid);
+    private UserDto toDto(User user) {
+        if (user == null) return null;
         return UserDto.builder()
-                .firstName(userAccount.getFirstName())
-                .lastName(userAccount.getLastName())
-                .email(userAccount.getEmail())
-                .department(userAccount.getDepartment().getName())
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
                 .build();
     }
 

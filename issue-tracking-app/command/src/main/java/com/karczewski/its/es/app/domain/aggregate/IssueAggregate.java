@@ -48,13 +48,25 @@ public class IssueAggregate extends Aggregate {
                 .build());
     }
 
+    public void process(ReassignIssueCommand command) {
+        if (this.issueStatus != null && this.issueStatus.canTransitionTo(IssueStatus.ASSIGNED)) {
+            applyChange(IssueReassignedEvent.builder()
+                    .aggregateId(aggregateId)
+                    .version(getVersion())
+                    .assignedTo(command.getAssignedTo())
+                    .assignedBy(command.getAssignedBy())
+                    .build());
+        } else {
+            throw new AggregateStateException("This issue cannot be reassigned.");
+        }
+    }
+
     public void process(AssignIssueCommand command) {
         if (this.issueStatus != null && this.issueStatus.canTransitionTo(IssueStatus.ASSIGNED)) {
             applyChange(IssueAssignedEvent.builder()
                     .aggregateId(aggregateId)
                     .version(getVersion())
                     .assignedTo(command.getAssignedTo())
-                    .assignedBy(command.getAssignedBy())
                     .build());
         } else {
             throw new AggregateStateException("This issue cannot be assigned.");
@@ -158,8 +170,14 @@ public class IssueAggregate extends Aggregate {
         this.numberOfComments = 0;
     }
 
+    private void apply(IssueReassignedEvent event) {
+        this.assignedTo = new UserId(event.getAssignedTo());
+        this.assignedAt = LocalDateTime.now();
+    }
+
     private void apply(IssueAssignedEvent event) {
         this.assignedTo = new UserId(event.getAssignedTo());
+        this.assignedAt = LocalDateTime.now();
     }
 
     private void apply(IssueAcceptedEvent event) {

@@ -10,13 +10,15 @@ import java.util.UUID;
 
 @Getter
 @ToString(callSuper = true)
-public class AssignIssueCommand extends Command {
+public final class ReassignIssueCommand extends Command {
 
     private final UUID assignedTo;
+    private final UUID assignedBy;
 
     @Builder
-    public AssignIssueCommand(UUID aggregateId, UUID assignedTo) {
+    public ReassignIssueCommand(UUID aggregateId, UUID assignedTo, UUID assignedBy) {
         super(AggregateType.ISSUE.toString(), aggregateId);
         this.assignedTo = assignedTo;
+        this.assignedBy = assignedBy;
     }
 }

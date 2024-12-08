@@ -16,5 +16,5 @@ public interface IssueProjectionQueryClient {
     Page<IssueProjection> getReportedIssues(IssueFilters filters, int offset, int limit);
 
     Page<IssueComment> getIssueComments(UUID uuid, int offset, int limit);
-
+    
 }

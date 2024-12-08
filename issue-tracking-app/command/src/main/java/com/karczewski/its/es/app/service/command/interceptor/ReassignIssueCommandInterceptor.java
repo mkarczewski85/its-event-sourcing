@@ -1,7 +1,7 @@
 package com.karczewski.its.es.app.service.command.interceptor;
 
 import com.karczewski.its.es.app.domain.aggregate.IssueAggregate;
-import com.karczewski.its.es.app.domain.command.AssignIssueCommand;
+import com.karczewski.its.es.app.domain.command.ReassignIssueCommand;
 import com.karczewski.its.es.app.service.utility.CastingUtility;
 import com.karczewski.its.es.core.domain.aggregate.Aggregate;
 import com.karczewski.its.es.core.domain.command.Command;
@@ -18,25 +18,25 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class AssignIssueCommandInterceptor implements CommandInterceptor<AssignIssueCommand> {
+public class ReassignIssueCommandInterceptor implements CommandInterceptor<ReassignIssueCommand> {
 
     private final UserClient userClient;
 
     @Override
     public void intercept(Aggregate aggregate, Command command) {
         IssueAggregate issueAggregate = CastingUtility.safeCast(aggregate, IssueAggregate.class);
-        AssignIssueCommand assignIssueCommand = CastingUtility.safeCast(command, AssignIssueCommand.class);
-        if (!issueAggregate.isAssignedTo(assignIssueCommand.getAssignedBy())) {
+        ReassignIssueCommand reassignIssueCommand = CastingUtility.safeCast(command, ReassignIssueCommand.class);
+        if (!issueAggregate.isAssignedTo(reassignIssueCommand.getAssignedBy())) {
             throw new AggregatePermissionDeniedException("No permission to accept the issue.");
         }
-        if (!userClient.existsByUUIDAndRole(assignIssueCommand.getAssignedTo(), UserRole.TECHNICIAN)) {
+        if (!userClient.existsByUUIDAndRole(reassignIssueCommand.getAssignedTo(), UserRole.TECHNICIAN)) {
             throw new UserNotFoundException("Unable to find assigned user");
         }
     }
 
     @Nonnull
     @Override
-    public Class<AssignIssueCommand> getCommandType() {
-        return AssignIssueCommand.class;
+    public Class<ReassignIssueCommand> getCommandType() {
+        return ReassignIssueCommand.class;
     }
 }

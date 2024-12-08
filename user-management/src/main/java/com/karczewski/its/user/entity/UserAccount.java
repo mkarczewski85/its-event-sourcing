@@ -2,6 +2,7 @@ package com.karczewski.its.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;
 
@@ -15,13 +16,8 @@ import java.util.UUID;
 public class UserAccount {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
-
-    @Column(name = "uuid")
-    @Builder.Default
-    private UUID uuid = UUID.randomUUID();
+    @UuidGenerator
+    private UUID id;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;

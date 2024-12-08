@@ -11,15 +11,17 @@ import java.util.UUID;
 
 @Getter
 @ToString(callSuper = true)
-public class IssueAssignedEvent extends Event {
+public class IssueReassignedEvent extends Event {
 
     private final UUID assignedTo;
+    private final UUID assignedBy;
 
     @JsonCreator
     @Builder
-    public IssueAssignedEvent(UUID aggregateId, int version, UUID assignedTo) {
+    public IssueReassignedEvent(UUID aggregateId, int version, UUID assignedTo, UUID assignedBy) {
         super(aggregateId, version);
         this.assignedTo = assignedTo;
+        this.assignedBy = assignedBy;
     }
 
     @Nonnull
