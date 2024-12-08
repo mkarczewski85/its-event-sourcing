@@ -1,8 +1,10 @@
 package com.karczewski.its.query.service.specification;
 
 import com.karczewski.its.query.entity.IssueProjection;
+import com.karczewski.its.query.entity.User;
 import com.karczewski.its.query.service.filters.IssueFilters;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
 @Component
 public class IssueProjectionSpecification {
@@ -30,10 +33,15 @@ public class IssueProjectionSpecification {
         return getIssueSpecification(filters.userUuid(), ASSIGNED_TO_FIELD_NAME, filters);
     }
 
-    private Specification<IssueProjection> getIssueSpecification(String userUuid, String fieldName, IssueFilters filters) {
+    public Specification<IssueProjection> getUnassignedIssuesSpecification() {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.isNull(root.get(ASSIGNED_TO_FIELD_NAME));
+    }
+
+    private Specification<IssueProjection> getIssueSpecification(UUID userUuid, String fieldName, IssueFilters filters) {
         return (root, query, criteriaBuilder) -> {
             Collection<Predicate> predicates = new ArrayList<>();
-            predicates.add(criteriaBuilder.equal(root.get(fieldName), userUuid));
+            Join<IssueProjection, User> issueUser = root.join(fieldName);
+            predicates.add(criteriaBuilder.equal(issueUser.get("id"), userUuid));
             addFilters(filters, criteriaBuilder, root, predicates);
             return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
         };

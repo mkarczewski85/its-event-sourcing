@@ -2,9 +2,12 @@ package com.karczewski.its.query;
 
 import com.karczewski.its.query.entity.IssueComment;
 import com.karczewski.its.query.entity.IssueProjection;
+import com.karczewski.its.query.entity.UserIssueCount;
 import com.karczewski.its.query.service.filters.IssueFilters;
 import org.springframework.data.domain.Page;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public interface IssueProjectionQueryClient {
@@ -16,5 +19,9 @@ public interface IssueProjectionQueryClient {
     Page<IssueProjection> getReportedIssues(IssueFilters filters, int offset, int limit);
 
     Page<IssueComment> getIssueComments(UUID uuid, int offset, int limit);
+
+    Collection<IssueProjection> getAllUnassignedIssues();
+
+    List<UserIssueCount> getUserAssignmentsCount();
     
 }
