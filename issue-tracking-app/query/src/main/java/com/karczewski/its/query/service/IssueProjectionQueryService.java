@@ -35,7 +35,7 @@ public class IssueProjectionQueryService implements IssueProjectionQueryClient {
 
     @Override
     public IssueProjection getIssueProjection(UUID uuid) {
-        IssueProjection issueProjection = issueProjectionRepository.findByUuid(uuid)
+        IssueProjection issueProjection = issueProjectionRepository.findById(uuid)
                 .orElseThrow(() -> new IssueNotFoundException("Unable to find issue with uuid: " + uuid));
         permissionValidator.validateUserPermission(issueProjection);
         return issueProjection;
@@ -62,7 +62,7 @@ public class IssueProjectionQueryService implements IssueProjectionQueryClient {
     @Override
     @Transactional(readOnly = true)
     public Page<IssueComment> getIssueComments(UUID uuid, int offset, int limit) {
-        IssueProjection issueProjection = issueProjectionRepository.findByUuid(uuid)
+        IssueProjection issueProjection = issueProjectionRepository.findById(uuid)
                 .orElseThrow(() -> new IssueNotFoundException("Unable to find issue with uuid: " + uuid));
         permissionValidator.validateUserPermission(issueProjection);
         int pageNo = (limit + offset) / limit;

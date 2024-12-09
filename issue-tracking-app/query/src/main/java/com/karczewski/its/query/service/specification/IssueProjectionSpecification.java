@@ -19,7 +19,7 @@ public class IssueProjectionSpecification {
 
     private static String REPORTED_BY_FIELD_NAME = "reportedBy";
     private static String ASSIGNED_TO_FIELD_NAME = "assignedTo";
-    private static String UUID_FIELD_NAME = "projectionUuid";
+    private static String ID_FIELD_NAME = "id";
     private static String STATUS_FIELD_NAME = "status";
     private static String SEVERITY_FIELD_NAME = "severity";
     private static String TYPE_FIELD_NAME = "type";
@@ -92,7 +92,7 @@ public class IssueProjectionSpecification {
                                                    Root<IssueProjection> root,
                                                    Collection<Predicate> predicates) {
         if (filters.projectionUuid() == null) return;
-        Predicate uuidPredicate = criteriaBuilder.equal(root.get(UUID_FIELD_NAME), filters.status());
+        Predicate uuidPredicate = criteriaBuilder.equal(root.get(ID_FIELD_NAME), filters.status());
         predicates.add(uuidPredicate);
     }
 

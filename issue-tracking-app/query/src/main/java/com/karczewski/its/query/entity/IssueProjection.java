@@ -1,7 +1,10 @@
 package com.karczewski.its.query.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,7 +12,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 @Entity
-@Table(name = "issues")
+@Table(name = "issue_projections")
 @RequiredArgsConstructor
 @Getter
 @Setter
@@ -17,11 +20,7 @@ public class IssueProjection {
 
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "projectionUuid", nullable = false)
-    private UUID uuid;
+    private UUID id;
 
     @Column(name = "summary", nullable = false)
     private String title;
@@ -57,8 +56,8 @@ public class IssueProjection {
     @Builder.Default
     private Collection<IssueComment> comments = new ArrayList<>(0);
 
-    private IssueProjection(UUID uuid) {
-        this.uuid = uuid;
+    private IssueProjection(UUID id) {
+        this.id = id;
     }
 
     public static IssueProjection newProjection(UUID uuid) {

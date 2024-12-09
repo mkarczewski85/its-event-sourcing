@@ -6,14 +6,11 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface IssueProjectionRepository extends CrudRepository<IssueProjection, Long>,
-        PagingAndSortingRepository<IssueProjection, Long>,
+public interface IssueProjectionRepository extends CrudRepository<IssueProjection, UUID>,
+        PagingAndSortingRepository<IssueProjection, UUID>,
         JpaSpecificationExecutor<IssueProjection> {
-
-    Optional<IssueProjection> findByUuid(UUID uuid);
 
 }

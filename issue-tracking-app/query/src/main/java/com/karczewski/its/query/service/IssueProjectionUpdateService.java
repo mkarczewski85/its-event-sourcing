@@ -21,7 +21,7 @@ public class IssueProjectionUpdateService implements IssueProjectionUpdateClient
     @Override
     @Transactional
     public void updateIssueProjection(IssueProjectionUpdateModel model) {
-        IssueProjection issueProjection = issueProjectionRepository.findByUuid(model.uuid())
+        IssueProjection issueProjection = issueProjectionRepository.findById(model.uuid())
                 .orElse(IssueProjection.newProjection(model.uuid()));
         issueProjection.setTitle(model.title());
         issueProjection.setDescription(model.description());
@@ -42,7 +42,7 @@ public class IssueProjectionUpdateService implements IssueProjectionUpdateClient
                 .authoredBy(userRepository.getById(model.authoredBy()))
                 .publishedAt(model.publishedAt())
                 .build();
-        IssueProjection issueProjection = issueProjectionRepository.findByUuid(model.issueUuid()).orElseThrow();
+        IssueProjection issueProjection = issueProjectionRepository.findById(model.issueUuid()).orElseThrow();
         issueProjection.addComment(issueComment);
     }
 }
