@@ -2,3 +2,13 @@ plugins {
     id 'java'
     id 'com.karczewski.its.common-conventions'
 }
+
+dependencies {
+    implementation project(':api')
+    implementation project(':job')
+
+    implementation libs.spring.boot.starter
+    implementation libs.liquibase.core
+    implementation libs.postgresql
+    implementation libs.spring.rest.docs
+}

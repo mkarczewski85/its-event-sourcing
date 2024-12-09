@@ -28,6 +28,8 @@ public class IssueProjectionUpdateService implements IssueProjectionUpdateClient
         issueProjection.setStatus(model.status());
         issueProjection.setSeverity(model.severity());
         issueProjection.setType(model.type());
+        issueProjection.setReportedAt(model.reportedAt());
+        issueProjection.setUpdatedAt(model.updatedAt());
         issueProjection.setReportedBy(userRepository.getById(model.reportedBy()));
         issueProjection.setAssignedTo(userRepository.getById(model.assignedTo()));
     }

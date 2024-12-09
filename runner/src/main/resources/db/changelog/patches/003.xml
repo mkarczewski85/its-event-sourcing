@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="003-issue-projections" author="mkarczewski">
+        <createTable tableName="issue_projections">
+            <column autoIncrement="true" name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_issue"/>
+            </column>
+            <column name="uuid" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="varchar(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="clob">
+                <constraints nullable="false"/>
+            </column>
+            <column name="severity" type="varchar(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reported_at" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="datetime">
+                <constraints nullable="true"/>
+            </column>
+            <column name="reported_by" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="assigned_to" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="003-issue-projections-fk" author="mkarczewski">
+        <addForeignKeyConstraint
+                baseColumnNames="reported_by"
+                baseTableName="issue_projections"
+                constraintName="fk_issue_reporter_id"
+                referencedColumnNames="id"
+                referencedTableName="user_accounts"
+                validate="true"/>
+        <addForeignKeyConstraint
+                baseColumnNames="assigned_to"
+                baseTableName="issue_projections"
+                constraintName="fk_issue_technician_id"
+                referencedColumnNames="id"
+                referencedTableName="user_accounts"
+                validate="true"/>
+    </changeSet>
+
+</databaseChangeLog>

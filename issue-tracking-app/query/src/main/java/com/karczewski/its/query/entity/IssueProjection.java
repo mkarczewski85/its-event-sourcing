@@ -42,6 +42,9 @@ public class IssueProjection {
     @Column(name = "reported_at", nullable = false)
     private LocalDateTime reportedAt;
 
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reported_by", nullable = false)
     private User reportedBy;

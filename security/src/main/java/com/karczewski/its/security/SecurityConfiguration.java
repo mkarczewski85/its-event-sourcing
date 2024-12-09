@@ -2,7 +2,6 @@ package com.karczewski.its.security;
 
 import com.karczewski.its.security.authentication.filter.JWTFilter;
 import jakarta.servlet.Filter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,15 +16,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity
 @Configuration
-@RequiredArgsConstructor
 public class SecurityConfiguration {
 
     @Value("${rest.prefix}")
     private String restPrefix;
     @Value("${rest.public.path}")
     private String restPublicPath;
-    @Value("${rest.secured.path}")
-    private String restSecuredPath;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

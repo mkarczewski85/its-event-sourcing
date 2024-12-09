@@ -23,8 +23,8 @@ public class OpenAPIConfiguration {
 
         Info info = new Info()
                 .contact(contact)
-                .description("Simple ticketing application")
-                .title("Issue Tracker")
+                .description("Simple ticketing application based on EventSourcing/CQRS pattern")
+                .title("Issue Tracking System (ITS)")
                 .version("V1.0")
                 .license(new License().name("MIT"));
 

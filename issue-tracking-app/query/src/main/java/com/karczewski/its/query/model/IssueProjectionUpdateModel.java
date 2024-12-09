@@ -14,6 +14,7 @@ public record IssueProjectionUpdateModel(
         String severity,
         String type,
         LocalDateTime reportedAt,
+        LocalDateTime updatedAt,
         UUID reportedBy,
         UUID assignedTo
 ) {
