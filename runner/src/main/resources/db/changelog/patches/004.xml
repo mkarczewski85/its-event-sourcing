@@ -17,7 +17,7 @@
             <column name="authored_by" type="uuid">
                 <constraints nullable="false"/>
             </column>
-            <column name="issue_id" type="bigint">
+            <column name="issue_id" type="uuid">
                 <constraints nullable="false"/>
             </column>
         </createTable>

@@ -2,9 +2,9 @@
 info:
   app:
     version: 1.0
-    name: WSB Issue Tracker
+    name: Issue Tracking System
     java:
-      version: 17 OpenJDK
+      version: 21 Liberica
     description: Program typu issue tracker
   
   ### API prefixes

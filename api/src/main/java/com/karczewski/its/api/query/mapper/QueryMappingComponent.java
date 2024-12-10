@@ -22,7 +22,7 @@ public class QueryMappingComponent {
 
     public IssueProjectionDto toDto(IssueProjection issueProjection) {
         return IssueProjectionDto.builder()
-                .uuid(issueProjection.getUuid())
+                .uuid(issueProjection.getId())
                 .title(issueProjection.getTitle())
                 .description(issueProjection.getDescription())
                 .type(issueProjection.getType())
@@ -36,7 +36,7 @@ public class QueryMappingComponent {
 
     public IssueProjectionItemDto toItemDto(IssueProjection issueProjection) {
         return IssueProjectionItemDto.builder()
-                .uuid(issueProjection.getUuid())
+                .uuid(issueProjection.getId())
                 .title(issueProjection.getTitle())
                 .status(issueProjection.getStatus())
                 .type(issueProjection.getType())

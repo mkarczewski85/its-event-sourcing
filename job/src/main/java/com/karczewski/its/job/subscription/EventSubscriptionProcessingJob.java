@@ -18,8 +18,8 @@ public class EventSubscriptionProcessingJob {
     private final EventSubscriptionProcessor eventSubscriptionProcessor;
 
     @Scheduled(
-            fixedDelayString = "${events.subscriptions.polling-interval}",
-            initialDelayString = "${events.subscriptions.polling-initial-delay}"
+            fixedDelayString = "${event-sourcing.subscriptions.polling-interval}",
+            initialDelayString = "${event-sourcing.subscriptions.polling-initial-delay}"
     )
     public void processNewEvents() {
         eventHandlers.forEach(this::processNewEvents);

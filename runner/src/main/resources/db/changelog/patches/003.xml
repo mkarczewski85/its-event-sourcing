@@ -6,7 +6,7 @@
 
     <changeSet id="003-issue-projections" author="mkarczewski">
         <createTable tableName="issue_projections">
-            <column autoIncrement="true" name="id" type="uuid">
+            <column name="id" type="uuid">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_issue"/>
             </column>
             <column name="title" type="varchar(512)">

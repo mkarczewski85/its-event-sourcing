@@ -1,25 +1,43 @@
-  changelog  ### Info endpoint configuration
-info:
-  app:
-    version: 1.0
-    name: WSB Issue Tracker
-    java:
-      version: 17 OpenJDK
-    description: Program typu issue tracker
-  
-  ### API prefixes
-rest:
-  prefix: /api
-  public:
-    path: /public
-  secured:
-    path: /secured
-
+### Data source config (test)
 spring:
-  ### JPA open-in-view
+  datasource:
+    url: jdbc:postgresql://localhost:5435/issue_tracker
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
   jpa:
-    open-in-view: false
-  ### LiquiBase properties
-  liquibase:
-    contexts: main
-    change-log: classpath:db/changelog/liquibase-changelog.xml
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  ### Email sender config (test)
+#  mail:
+#    host: <email_server>
+#    username: <email_account_username>
+#    password: <email_account_password>
+#    port: 587
+#    protocol: smtp
+
+
+### JWT config
+jwt:
+  base64-secret: >-
+    WCMjWk5YVitaIXJjUCwmLGQ/dkNJJTd3eEZKaTliVHQ4XixyJEJ+fk5hLGJ4dmVsfkFLc1MxWF5xZT9SZ2Z0ZGNmY2dmNDc0NjV2dGRmZmRnZmQ1NzY1N2ZoZmhnNjg3Ng
+  expiration-in-seconds: '86400'
+
+### event sourcing properties
+event-sourcing:
+  snapshotting:
+    ISSUE:
+      enabled: true
+      nth-event: 20
+  subscriptions:
+    polling-initial-delay: PT1S
+    polling-interval: PT1S
+
+
+### issue assignments
+issues:
+  assigment:
+    polling-interval: PT2M
+    polling-initial-delay: PT2M

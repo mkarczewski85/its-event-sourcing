@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -14,7 +16,7 @@ public class PatchUserRequestDto {
     private String firstName;
     private String lastName;
     private String email;
-    private Long departmentId;
+    private UUID departmentId;
     private Boolean isActive;
 
 }

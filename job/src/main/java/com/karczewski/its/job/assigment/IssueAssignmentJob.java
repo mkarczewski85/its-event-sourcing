@@ -34,7 +34,7 @@ public class IssueAssignmentJob {
         List<UserIssueCount> userAssignmentsCount = queryClient.getUserAssignmentsCount();
         Iterator<UserIssueCount> cyclicIterator = new CyclicIterator<>(userAssignmentsCount);
         allUnassigned.stream()
-                .map(IssueProjection::getUuid)
+                .map(IssueProjection::getId)
                 .forEach(id -> issueAssigmentComponent.assignIssue(id, cyclicIterator.next().getUserId()));
     }
 
