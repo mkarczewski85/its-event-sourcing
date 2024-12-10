@@ -3,29 +3,33 @@ package com.karczewski.its.user;
 import com.karczewski.its.user.dto.CreateUserRequestDto;
 import com.karczewski.its.user.dto.PatchUserRequestDto;
 import com.karczewski.its.user.dto.UserFilters;
+import com.karczewski.its.user.entity.Department;
 import com.karczewski.its.user.entity.UserAccount;
 import com.karczewski.its.user.entity.UserCredentials;
 import com.karczewski.its.user.entity.UserRole;
 import org.springframework.data.domain.Page;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface UserClient {
 
-    Page<UserAccount> getUsers(UserFilters filters, int offset, int limit);
+    Page<UserAccount> getUserAccounts(UserFilters filters, int offset, int limit);
+
+    Collection<Department> getAllUserDepartments();
 
     Optional<UserAccount> findByEmail(String email);
 
-    UserAccount createUser(CreateUserRequestDto reqDTO);
+    UserAccount createUserAccount(CreateUserRequestDto reqDTO);
 
-    UserAccount patchUser(UUID uuid, PatchUserRequestDto reqDTO);
+    UserAccount patchUserAccount(UUID uuid, PatchUserRequestDto reqDTO);
 
     UserAccount resetUserCredentials(UUID uuid);
 
-    UserAccount getByUUID(UUID uuid);
+    UserAccount getUserAccount(UUID uuid);
 
-    void deactivateUser(UUID uuid);
+    void deactivateUserAccount(UUID uuid);
 
     boolean existsByUUIDAndRole(UUID uuid, UserRole role);
 

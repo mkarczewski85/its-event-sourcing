@@ -43,4 +43,8 @@ public class UserAccount {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    public void deactivate() {
+        this.isActive = false;
+    }
+
 }

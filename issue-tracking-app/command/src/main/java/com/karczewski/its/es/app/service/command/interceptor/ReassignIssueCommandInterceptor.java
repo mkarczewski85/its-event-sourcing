@@ -9,7 +9,7 @@ import com.karczewski.its.es.core.exception.AggregatePermissionDeniedException;
 import com.karczewski.its.es.core.service.command.CommandInterceptor;
 import com.karczewski.its.user.UserClient;
 import com.karczewski.its.user.entity.UserRole;
-import com.karczewski.its.user.exception.UserNotFoundException;
+import com.karczewski.its.user.exception.UserAccountNotFoundException;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class ReassignIssueCommandInterceptor implements CommandInterceptor<Reass
             throw new AggregatePermissionDeniedException("No permission to accept the issue.");
         }
         if (!userClient.existsByUUIDAndRole(reassignIssueCommand.getAssignedTo(), UserRole.TECHNICIAN)) {
-            throw new UserNotFoundException("Unable to find assigned user");
+            throw new UserAccountNotFoundException("Unable to find assigned user");
         }
     }
 

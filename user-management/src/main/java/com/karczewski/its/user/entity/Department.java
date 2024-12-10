@@ -2,6 +2,9 @@ package com.karczewski.its.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
@@ -13,9 +16,9 @@ import lombok.*;
 public class Department {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @UuidGenerator
     @Column(name = "id", nullable = false)
-    private Long id;
+    private UUID id;
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;

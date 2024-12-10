@@ -1,9 +1,9 @@
 package com.karczewski.its.api.query.controller;
 
-import com.karczewski.its.api.query.dto.pagination.PageWrapper;
-import com.karczewski.its.api.query.dto.response.IssueCommentDto;
-import com.karczewski.its.api.query.dto.response.IssueProjectionDto;
-import com.karczewski.its.api.query.dto.response.IssueProjectionItemDto;
+import com.karczewski.its.api.pagination.PageWrapper;
+import com.karczewski.its.api.query.dto.IssueCommentDto;
+import com.karczewski.its.api.query.dto.IssueProjectionDto;
+import com.karczewski.its.api.query.dto.IssueProjectionItemDto;
 import com.karczewski.its.api.query.mapper.QueryMappingComponent;
 import com.karczewski.its.query.IssueProjectionQueryClient;
 import com.karczewski.its.query.service.filters.IssueFilters;
