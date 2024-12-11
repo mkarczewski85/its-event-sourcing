@@ -1,5 +1,8 @@
 ### Data source config (test)
 spring:
+  sql:
+    init:
+      mode: never
   datasource:
     url: jdbc:postgresql://localhost:5435/issue_tracker
     driverClassName: org.postgresql.Driver

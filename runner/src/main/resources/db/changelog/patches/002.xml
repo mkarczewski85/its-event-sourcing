@@ -23,7 +23,7 @@
             <column name="is_active" type="boolean">
                 <constraints nullable="false"/>
             </column>
-            <column name="department_id" type="bigint">
+            <column name="department_id" type="uuid">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -48,7 +48,7 @@
 
     <changeSet id="002-departments" author="mkarczewski">
         <createTable tableName="departments">
-            <column autoIncrement="true" name="id" type="bigint">
+            <column name="id" type="uuid">
                 <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="pk_departments"/>
             </column>
             <column name="name" type="varchar(256)">
