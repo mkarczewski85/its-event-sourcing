@@ -56,7 +56,7 @@ public class IssueCommandController {
         return IssueCommandResponseDto.builder().uuid(uuid).build();
     }
 
-    @PostMapping("/{uuid/assign}")
+    @PostMapping("/{uuid}/assign")
     @PreAuthorize("hasRole('ROLE_TECHNICIAN')")
     public IssueCommandResponseDto assignIssue(@PathVariable final UUID uuid,
                                                @RequestBody @Valid @NotNull final AssignIssueRequestDto request) {

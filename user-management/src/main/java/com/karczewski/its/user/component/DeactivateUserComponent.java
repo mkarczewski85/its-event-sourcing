@@ -15,7 +15,7 @@ public class DeactivateUserComponent {
     private final UserAccountRepository userRepository;
 
     public void deactivateUser(final UUID uuid) {
-        UserAccount userAccount = userRepository.findByUuid(uuid)
+        UserAccount userAccount = userRepository.findById(uuid)
                 .orElseThrow(() -> new UserAccountNotFoundException("Unable to find user with id: " + uuid));
         userAccount.deactivate();
     }

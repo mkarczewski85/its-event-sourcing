@@ -21,7 +21,7 @@ public class IssueProjection {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column(name = "summary", nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
 
     @Lob

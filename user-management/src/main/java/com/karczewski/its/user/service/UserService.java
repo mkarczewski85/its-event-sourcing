@@ -89,6 +89,6 @@ public class UserService implements UserClient {
 
     @Override
     public boolean existsByUUIDAndRole(UUID uuid, UserRole role) {
-        return userAccountRepository.existsByUuidAndRoleAndActive(uuid, role, true);
+        return userAccountRepository.existsByIdAndRole(uuid, role); // TODO
     }
 }

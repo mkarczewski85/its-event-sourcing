@@ -5,9 +5,13 @@ plugins {
 
 dependencies {
     implementation project(':api')
+    implementation project(':security')
     implementation project(':job')
+    implementation project(':issue-tracking-app')
+    implementation project(':user-management')
 
     implementation libs.spring.boot.starter
+    implementation libs.spring.boot.data
     implementation libs.liquibase.core
     implementation libs.postgresql
     implementation libs.spring.rest.docs

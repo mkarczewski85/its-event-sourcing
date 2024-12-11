@@ -36,7 +36,7 @@ public class UserAccount {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
+    @OneToOne(mappedBy = "userAccount", cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
     private UserCredentials userCredentials;
 
     @Column(name = "role", nullable = false)

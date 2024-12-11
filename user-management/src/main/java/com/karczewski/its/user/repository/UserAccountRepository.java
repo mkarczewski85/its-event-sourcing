@@ -12,19 +12,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface UserAccountRepository extends CrudRepository<UserAccount, Long>,
-        PagingAndSortingRepository<UserAccount, Long>, JpaSpecificationExecutor<UserAccount> {
+public interface UserAccountRepository extends CrudRepository<UserAccount, UUID>,
+        PagingAndSortingRepository<UserAccount, UUID>, JpaSpecificationExecutor<UserAccount> {
 
-    Optional<UserAccount> findByEmailAndIsActive(String email, boolean active);
-
-    Optional<UserAccount> findByUuid(UUID uuid);
-
-    UserAccount getByUuid(UUID uuid);
+    Optional<UserAccount> findByEmail(String email);
 
     boolean existsByEmail(String email);
     
-    boolean existsByUuidAndRoleAndActive(UUID uuid, UserRole userRole, boolean active);
-
-    void deleteByUuid(UUID uuid);
+    boolean existsByIdAndRole(UUID id, UserRole userRole);
 
 }

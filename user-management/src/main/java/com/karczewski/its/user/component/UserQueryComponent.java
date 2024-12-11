@@ -29,11 +29,12 @@ public class UserQueryComponent {
     }
 
     public Optional<UserAccount> findByEmail(final String email) {
-        return userRepository.findByEmailAndIsActive(email, true);
+        return userRepository.findByEmail(email);
     }
 
     public UserAccount getByUUID(final UUID uuid) {
-        return userRepository.findByUuid(uuid).orElseThrow(() -> new UserAccountNotFoundException("Unable to find user"));
+        return userRepository.findById(uuid)
+                .orElseThrow(() -> new UserAccountNotFoundException("Unable to find user"));
     }
 
 }
