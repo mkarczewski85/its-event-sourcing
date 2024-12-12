@@ -15,7 +15,7 @@ public class UserPermissionValidator {
 
     public void validateUserPermission(IssueProjection issueProjection) {
         UUID userUuid = authenticationClient.getLoggedUserUuid();
-        if (userUuid.equals(issueProjection.getReportedBy()) || userUuid.equals(issueProjection.getAssignedTo())) return;
+        if (issueProjection.hasPermissionToQuery(userUuid)) return;
         throw new QueryPermissionDeniedException("No permission to query issue");
     }
 }

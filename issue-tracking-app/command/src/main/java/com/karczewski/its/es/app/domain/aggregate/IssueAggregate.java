@@ -39,7 +39,7 @@ public class IssueAggregate extends Aggregate {
         }
         applyChange(IssueReportedEvent.builder()
                 .aggregateId(aggregateId)
-                .version(getVersion())
+                .version(getNextVersion())
                 .issueTitle(command.getIssueTitle())
                 .issueDescription(command.getIssueDescription())
                 .issueSeverity(command.getIssueSeverity())
@@ -52,7 +52,7 @@ public class IssueAggregate extends Aggregate {
         if (this.issueStatus != null && this.issueStatus.canTransitionTo(IssueStatus.ASSIGNED)) {
             applyChange(IssueReassignedEvent.builder()
                     .aggregateId(aggregateId)
-                    .version(getVersion())
+                    .version(getNextVersion())
                     .assignedTo(command.getAssignedTo())
                     .assignedBy(command.getAssignedBy())
                     .build());
@@ -65,7 +65,7 @@ public class IssueAggregate extends Aggregate {
         if (this.issueStatus != null && this.issueStatus.canTransitionTo(IssueStatus.ASSIGNED)) {
             applyChange(IssueAssignedEvent.builder()
                     .aggregateId(aggregateId)
-                    .version(getVersion())
+                    .version(getNextVersion())
                     .assignedTo(command.getAssignedTo())
                     .build());
         } else {
@@ -77,7 +77,7 @@ public class IssueAggregate extends Aggregate {
         if (this.issueStatus != null && this.issueStatus.canTransitionTo(IssueStatus.IN_PROGRESS)) {
             applyChange(IssueAcceptedEvent.builder()
                     .aggregateId(aggregateId)
-                    .version(getVersion())
+                    .version(getNextVersion())
                     .acceptedBy(command.getAcceptedBy())
                     .build());
         } else {
@@ -89,7 +89,7 @@ public class IssueAggregate extends Aggregate {
         if (this.issueStatus != null && this.issueStatus.canTransitionTo(IssueStatus.REJECTED)) {
             applyChange(IssueRejectedEvent.builder()
                     .aggregateId(aggregateId)
-                    .version(getVersion())
+                    .version(getNextVersion())
                     .rejectedBy(command.getRejectedBy())
                     .build());
         } else {
@@ -101,7 +101,7 @@ public class IssueAggregate extends Aggregate {
         if (this.issueStatus != null && this.issueStatus.canTransitionTo(IssueStatus.CANCELLED)) {
             applyChange(IssueCancelledEvent.builder()
                     .aggregateId(aggregateId)
-                    .version(getVersion())
+                    .version(getNextVersion())
                     .cancelledBy(command.getCancelledBy())
                     .build());
         } else {
@@ -113,7 +113,7 @@ public class IssueAggregate extends Aggregate {
         if (this.issueStatus != null && this.issueStatus.canTransitionTo(IssueStatus.RESOLVED)) {
             applyChange(IssueResolvedEvent.builder()
                     .aggregateId(aggregateId)
-                    .version(getVersion())
+                    .version(getNextVersion())
                     .resolvedBy(command.getResolvedBy())
                     .build());
         } else {
@@ -128,7 +128,7 @@ public class IssueAggregate extends Aggregate {
         if (this.issueSeverity.hasNameEqualTo(command.getIssueSeverity())) return;
         applyChange(IssueSeverityUpdatedEvent.builder()
                 .aggregateId(aggregateId)
-                .version(getVersion())
+                .version(getNextVersion())
                 .issueSeverity(command.getIssueSeverity())
                 .updatedBy(command.getUpdatedBy())
                 .build());
@@ -141,7 +141,7 @@ public class IssueAggregate extends Aggregate {
         if (this.issueType.hasNameEqualTo(command.getIssueType())) return;
         applyChange(IssueTypeUpdatedEvent.builder()
                 .aggregateId(aggregateId)
-                .version(getVersion())
+                .version(getNextVersion())
                 .issueType(command.getIssueType())
                 .updatedBy(command.getUpdatedBy())
                 .build());
@@ -153,65 +153,74 @@ public class IssueAggregate extends Aggregate {
         }
         applyChange(IssueCommentedEvent.builder()
                 .aggregateId(aggregateId)
-                .version(getVersion())
+                .version(getNextVersion())
                 .authoredBy(command.getAuthoredBy())
                 .comment(command.getComment())
                 .build());
     }
 
-    private void apply(IssueReportedEvent event) {
+    public void apply(IssueReportedEvent event) {
         this.issueTitle = new IssueTitle(event.getIssueTitle());
         this.issueDescription = new IssueDescription(event.getIssueDescription());
         this.reportedBy = new UserId(event.getReportedBy());
         this.issueStatus = IssueStatus.REPORTED;
         this.issueSeverity = IssueSeverity.getByName(event.getIssueSeverity());
-        this.issueType = IssueType.getByName(event.getEventType());
+        this.issueType = IssueType.getByName(event.getIssueType());
         this.reportedAt = event.getCreatedDate();
         this.numberOfComments = 0;
     }
 
-    private void apply(IssueReassignedEvent event) {
+    public void apply(IssueReassignedEvent event) {
         this.assignedTo = new UserId(event.getAssignedTo());
         this.assignedAt = LocalDateTime.now();
     }
 
-    private void apply(IssueAssignedEvent event) {
+    public void apply(IssueAssignedEvent event) {
+        this.issueStatus = IssueStatus.ASSIGNED;
         this.assignedTo = new UserId(event.getAssignedTo());
         this.assignedAt = LocalDateTime.now();
     }
 
-    private void apply(IssueAcceptedEvent event) {
+    public void apply(IssueAcceptedEvent event) {
         this.issueStatus = IssueStatus.IN_PROGRESS;
         this.acceptedAt = event.getCreatedDate();
     }
 
-    private void apply(IssueRejectedEvent event) {
+    public void apply(IssueRejectedEvent event) {
         this.issueStatus = IssueStatus.REJECTED;
         this.completedAt = event.getCreatedDate();
     }
 
-    private void apply(IssueCancelledEvent event) {
+    public void apply(IssueCancelledEvent event) {
         this.issueStatus = IssueStatus.CANCELLED;
         this.completedAt = event.getCreatedDate();
     }
 
-    private void apply(IssueResolvedEvent event) {
+    public void apply(IssueResolvedEvent event) {
         this.issueStatus = IssueStatus.RESOLVED;
         this.completedAt = event.getCreatedDate();
     }
 
-    private void apply(IssueSeverityUpdatedEvent event) {
+    public void apply(IssueSeverityUpdatedEvent event) {
         this.issueSeverity = IssueSeverity.getByName(event.getIssueSeverity());
         this.updatedAt = event.getCreatedDate();
     }
 
-    private void apply(IssueTypeUpdatedEvent event) {
+    public void apply(IssueTypeUpdatedEvent event) {
         this.issueType = IssueType.getByName(event.getIssueType());
         this.updatedAt = event.getCreatedDate();
     }
 
-    private void apply(IssueCommentedEvent event) {
+    public void apply(IssueCommentedEvent event) {
         this.numberOfComments++;
+    }
+
+    public UUID getAssignedTo() {
+        return this.assignedTo != null ? this.assignedTo.getId() : null;
+    }
+
+    public UUID getReportedBy() {
+        return this.reportedBy != null ? this.reportedBy.getId() : null;
     }
 
     private boolean isIssueCompleted() {

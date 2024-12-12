@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Builder
 public record IssueProjectionItemDto(
-        UUID uuid,
+        UUID id,
         String title,
         String status,
         String severity,

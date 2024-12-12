@@ -1,6 +1,7 @@
 package com.karczewski.its.es.app.domain.event;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.karczewski.its.es.core.domain.event.Event;
 import jakarta.annotation.Nonnull;
 import lombok.Builder;
@@ -21,13 +22,13 @@ public class IssueReportedEvent extends Event {
 
     @JsonCreator
     @Builder
-    public IssueReportedEvent(UUID aggregateId,
-                              int version,
-                              String issueTitle,
-                              String issueDescription,
-                              String issueSeverity,
-                              String issueType,
-                              UUID reportedBy) {
+    public IssueReportedEvent(@JsonProperty("aggregateId") UUID aggregateId,
+                              @JsonProperty("version") int version,
+                              @JsonProperty("issueTitle") String issueTitle,
+                              @JsonProperty("issueDescription") String issueDescription,
+                              @JsonProperty("issueSeverity") String issueSeverity,
+                              @JsonProperty("issueType") String issueType,
+                              @JsonProperty("reportedBy") UUID reportedBy) {
         super(aggregateId, version);
         this.issueTitle = issueTitle;
         this.issueDescription = issueDescription;

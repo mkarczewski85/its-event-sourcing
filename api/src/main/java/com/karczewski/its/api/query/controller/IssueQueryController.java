@@ -7,6 +7,7 @@ import com.karczewski.its.api.query.dto.IssueProjectionItemDto;
 import com.karczewski.its.api.query.mapper.QueryMappingComponent;
 import com.karczewski.its.query.IssueProjectionQueryClient;
 import com.karczewski.its.query.service.filters.IssueFilters;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,15 +36,15 @@ public class IssueQueryController {
     @GetMapping("/reported")
     @PreAuthorize("hasRole('ROLE_REPORTER')")
     public PageWrapper<IssueProjectionItemDto> getReportedIssues(
-            @RequestParam(required = false) final UUID uuid,
-            @RequestParam(required = false) final String titlePhrase,
-            @RequestParam(required = false) final String status,
-            @RequestParam(required = false) final String severity,
-            @RequestParam(required = false) final String type,
-            @RequestParam(defaultValue = "0") @Min(0) final int offset,
-            @RequestParam(defaultValue = "20") @Min(20) final int limit
+            @Nullable @RequestParam(required = false, name = "id")  UUID id,
+            @Nullable @RequestParam(required = false, name = "titlePhrase") String titlePhrase,
+            @Nullable @RequestParam(required = false, name = "status") String status,
+            @Nullable @RequestParam(required = false, name = "severity") String severity,
+            @Nullable @RequestParam(required = false, name = "type") String type,
+            @RequestParam(required = false, defaultValue = "0", name = "offset") @Min(0) int offset,
+            @RequestParam(required = false, defaultValue = "20", name = "limit") @Min(20) int limit
     ) {
-        IssueFilters filters = queryMappingComponent.toFilters(uuid, titlePhrase, status, severity, type);
+        IssueFilters filters = queryMappingComponent.toFilters(id, titlePhrase, status, severity, type);
         return PageWrapper.from(issueProjectionQueryClient.getReportedIssues(filters, offset, limit)
                 .map(queryMappingComponent::toItemDto));
     }
@@ -51,15 +52,15 @@ public class IssueQueryController {
     @GetMapping("/assigned")
     @PreAuthorize("hasRole('ROLE_TECHNICIAN')")
     public PageWrapper<IssueProjectionItemDto> getAssignedIssues(
-            @RequestParam(required = false) final UUID uuid,
-            @RequestParam(required = false) final String titlePhrase,
-            @RequestParam(required = false) final String status,
-            @RequestParam(required = false) final String severity,
-            @RequestParam(required = false) final String type,
-            @RequestParam(defaultValue = "0") @Min(0) final int offset,
-            @RequestParam(defaultValue = "20") @Min(20) final int limit
+            @Nullable @RequestParam(required = false, name = "id")  UUID id,
+            @Nullable @RequestParam(required = false, name = "titlePhrase") String titlePhrase,
+            @Nullable @RequestParam(required = false, name = "status") String status,
+            @Nullable @RequestParam(required = false, name = "severity") String severity,
+            @Nullable @RequestParam(required = false, name = "type") String type,
+            @RequestParam(required = false, defaultValue = "0", name = "offset") @Min(0) int offset,
+            @RequestParam(required = false, defaultValue = "20", name = "limit") @Min(20) int limit
     ) {
-        IssueFilters filters = queryMappingComponent.toFilters(uuid, titlePhrase, status, severity, type);
+        IssueFilters filters = queryMappingComponent.toFilters(id, titlePhrase, status, severity, type);
         return PageWrapper.from(issueProjectionQueryClient.getAssignedIssues(filters, offset, limit)
                 .map(queryMappingComponent::toItemDto));
     }

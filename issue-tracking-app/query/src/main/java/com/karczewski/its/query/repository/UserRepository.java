@@ -19,9 +19,11 @@ public interface UserRepository extends CrudRepository<User, UUID>,
     User getById(UUID id);
 
     @Query("""
-            SELECT new com.karczewski.its.query.entity.UserIssueCount(u.id, COUNT(i.id)) 
-            FROM User u LEFT JOIN u.assigned i 
-            WHERE i.status IN ('IN_PROGRESS', 'ASSIGNED') 
+            SELECT new com.karczewski.its.query.entity.UserIssueCount(u.id, COALESCE(COUNT(i.id), 0))
+            FROM UserAccount u
+            LEFT JOIN IssueProjection i
+            ON i.assignedTo.id = u.id AND i.status IN ('IN_PROGRESS', 'ASSIGNED')
+            WHERE u.role = 'TECHNICIAN'
             GROUP BY u.id
             ORDER BY COUNT(i.id) ASC
             """)

@@ -31,7 +31,10 @@ public class IssueProjectionUpdateService implements IssueProjectionUpdateClient
         issueProjection.setReportedAt(model.reportedAt());
         issueProjection.setUpdatedAt(model.updatedAt());
         issueProjection.setReportedBy(userRepository.getById(model.reportedBy()));
-        issueProjection.setAssignedTo(userRepository.getById(model.assignedTo()));
+        if (model.assignedTo() != null) {
+            issueProjection.setAssignedTo(userRepository.getById(model.assignedTo()));
+        }
+        issueProjectionRepository.save(issueProjection);
     }
 
     @Override
@@ -44,5 +47,6 @@ public class IssueProjectionUpdateService implements IssueProjectionUpdateClient
                 .build();
         IssueProjection issueProjection = issueProjectionRepository.findById(model.issueUuid()).orElseThrow();
         issueProjection.addComment(issueComment);
+        issueProjectionRepository.save(issueProjection);
     }
 }

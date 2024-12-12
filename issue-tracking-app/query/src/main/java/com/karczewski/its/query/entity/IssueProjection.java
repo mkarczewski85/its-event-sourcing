@@ -43,11 +43,11 @@ public class IssueProjection {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reported_by", nullable = false)
     private User reportedBy;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "assigned_to")
     private User assignedTo;
 
@@ -66,6 +66,13 @@ public class IssueProjection {
     public void addComment(IssueComment issueComment) {
         this.comments.add(issueComment);
         issueComment.setIssue(this);
+    }
+
+    public boolean hasPermissionToQuery(UUID userId) {
+        if (this.reportedBy != null && this.reportedBy.getId().equals(userId)) {
+            return true;
+        }
+        return this.assignedTo != null && this.assignedTo.getId().equals(userId);
     }
 
 }

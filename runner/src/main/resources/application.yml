@@ -1,4 +1,4 @@
-  ### Info endpoint configuration
+### Info endpoint configuration
 info:
   app:
     version: 1.0
@@ -6,8 +6,8 @@ info:
     java:
       version: 21 Liberica
     description: Program typu issue tracker
-  
-  ### API prefixes
+
+### API prefixes
 rest:
   prefix: /api
   public:
@@ -16,6 +16,15 @@ rest:
     path: /secured
 
 spring:
+  datasource:
+    hikari:
+      minimumIdle: 2
+      maximumPoolSize: 10
+      idleTimeout: 120000
+      connectionTimeout: 300000
+      leakDetectionThreshold: 300000
+  jackson:
+    default-property-inclusion: non_null
   ### JPA open-in-view
   jpa:
     open-in-view: false

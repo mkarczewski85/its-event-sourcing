@@ -36,7 +36,7 @@ public class QueryMappingComponent {
 
     public IssueProjectionItemDto toItemDto(IssueProjection issueProjection) {
         return IssueProjectionItemDto.builder()
-                .uuid(issueProjection.getId())
+                .id(issueProjection.getId())
                 .title(issueProjection.getTitle())
                 .status(issueProjection.getStatus())
                 .type(issueProjection.getType())

@@ -1,6 +1,7 @@
 package com.karczewski.its.es.app.domain.event;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.karczewski.its.es.core.domain.event.Event;
 import jakarta.annotation.Nonnull;
 import lombok.Builder;
@@ -17,7 +18,9 @@ public class IssueAssignedEvent extends Event {
 
     @JsonCreator
     @Builder
-    public IssueAssignedEvent(UUID aggregateId, int version, UUID assignedTo) {
+    public IssueAssignedEvent(@JsonProperty("aggregateId") UUID aggregateId,
+                              @JsonProperty("version") int version,
+                              @JsonProperty("assignedTo") UUID assignedTo) {
         super(aggregateId, version);
         this.assignedTo = assignedTo;
     }

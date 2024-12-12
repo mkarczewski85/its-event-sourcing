@@ -46,7 +46,7 @@ public class IssueProjectionQueryService implements IssueProjectionQueryClient {
     public Page<IssueProjection> getAssignedIssues(IssueFilters filters, int offset, int limit) {
         Specification<IssueProjection> specification = projectionSpecification.getAssignedIssueSpecification(filters);
         int pageNo = (limit + offset) / limit;
-        PageRequest pageRequest = PageRequest.of(--pageNo, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
+        PageRequest pageRequest = PageRequest.of(--pageNo, limit, Sort.by(Sort.Direction.DESC, "reportedAt"));
         return issueProjectionRepository.findAll(specification, pageRequest);
     }
 
@@ -55,7 +55,7 @@ public class IssueProjectionQueryService implements IssueProjectionQueryClient {
     public Page<IssueProjection> getReportedIssues(IssueFilters filters, int offset, int limit) {
         Specification<IssueProjection> specification = projectionSpecification.getReportedIssueSpecification(filters);
         int pageNo = (limit + offset) / limit;
-        PageRequest pageRequest = PageRequest.of(--pageNo, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
+        PageRequest pageRequest = PageRequest.of(--pageNo, limit, Sort.by(Sort.Direction.DESC, "reportedAt"));
         return issueProjectionRepository.findAll(specification, pageRequest);
     }
 
