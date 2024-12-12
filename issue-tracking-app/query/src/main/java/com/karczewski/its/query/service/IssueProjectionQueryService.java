@@ -3,6 +3,7 @@ package com.karczewski.its.query.service;
 import com.karczewski.its.query.IssueProjectionQueryClient;
 import com.karczewski.its.query.entity.IssueComment;
 import com.karczewski.its.query.entity.IssueProjection;
+import com.karczewski.its.query.entity.User;
 import com.karczewski.its.query.entity.UserIssueCount;
 import com.karczewski.its.query.exception.IssueNotFoundException;
 import com.karczewski.its.query.repository.IssueCommentRepository;
@@ -11,6 +12,7 @@ import com.karczewski.its.query.repository.UserRepository;
 import com.karczewski.its.query.service.filters.IssueFilters;
 import com.karczewski.its.query.service.specification.IssueProjectionSpecification;
 import com.karczewski.its.query.service.validation.UserPermissionValidator;
+import com.karczewski.its.security.authentication.AuthenticationClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,18 +34,21 @@ public class IssueProjectionQueryService implements IssueProjectionQueryClient {
     private final IssueCommentRepository issueCommentRepository;
     private final UserRepository userRepository;
     private final UserPermissionValidator permissionValidator;
+    private final AuthenticationClient authenticationClient;
 
     @Override
     public IssueProjection getIssueProjection(UUID uuid) {
         IssueProjection issueProjection = issueProjectionRepository.findById(uuid)
                 .orElseThrow(() -> new IssueNotFoundException("Unable to find issue with uuid: " + uuid));
-        permissionValidator.validateUserPermission(issueProjection);
+        permissionValidator.validateUserPermission(issueProjection, authenticationClient.getLoggedUserUuid());
         return issueProjection;
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<IssueProjection> getAssignedIssues(IssueFilters filters, int offset, int limit) {
+        User loggedUser = userRepository.getById(authenticationClient.getLoggedUserUuid());
+        filters.setUser(loggedUser);
         Specification<IssueProjection> specification = projectionSpecification.getAssignedIssueSpecification(filters);
         int pageNo = (limit + offset) / limit;
         PageRequest pageRequest = PageRequest.of(--pageNo, limit, Sort.by(Sort.Direction.DESC, "reportedAt"));
@@ -53,6 +58,8 @@ public class IssueProjectionQueryService implements IssueProjectionQueryClient {
     @Override
     @Transactional(readOnly = true)
     public Page<IssueProjection> getReportedIssues(IssueFilters filters, int offset, int limit) {
+        User loggedUser = userRepository.getById(authenticationClient.getLoggedUserUuid());
+        filters.setUser(loggedUser);
         Specification<IssueProjection> specification = projectionSpecification.getReportedIssueSpecification(filters);
         int pageNo = (limit + offset) / limit;
         PageRequest pageRequest = PageRequest.of(--pageNo, limit, Sort.by(Sort.Direction.DESC, "reportedAt"));
@@ -64,7 +71,7 @@ public class IssueProjectionQueryService implements IssueProjectionQueryClient {
     public Page<IssueComment> getIssueComments(UUID uuid, int offset, int limit) {
         IssueProjection issueProjection = issueProjectionRepository.findById(uuid)
                 .orElseThrow(() -> new IssueNotFoundException("Unable to find issue with uuid: " + uuid));
-        permissionValidator.validateUserPermission(issueProjection);
+        permissionValidator.validateUserPermission(issueProjection, authenticationClient.getLoggedUserUuid());
         int pageNo = (limit + offset) / limit;
         PageRequest pageRequest = PageRequest.of(--pageNo, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
         return issueCommentRepository.findAllByIssue(issueProjection, pageRequest);

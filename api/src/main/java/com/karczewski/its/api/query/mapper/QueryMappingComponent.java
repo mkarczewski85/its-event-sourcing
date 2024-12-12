@@ -8,7 +8,6 @@ import com.karczewski.its.query.entity.IssueComment;
 import com.karczewski.its.query.entity.IssueProjection;
 import com.karczewski.its.query.entity.User;
 import com.karczewski.its.query.service.filters.IssueFilters;
-import com.karczewski.its.security.authentication.AuthenticationClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +16,6 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class QueryMappingComponent {
-
-    private final AuthenticationClient authenticationClient;
 
     public IssueProjectionDto toDto(IssueProjection issueProjection) {
         return IssueProjectionDto.builder()
@@ -59,12 +56,11 @@ public class QueryMappingComponent {
                                   String severity,
                                   String type) {
         return IssueFilters.builder()
-                .projectionUuid(uuid)
+                .projectionId(uuid)
                 .titlePhrase(titlePhrase)
                 .status(status)
                 .severity(severity)
                 .type(type)
-                .userUuid(authenticationClient.getLoggedUserUuid())
                 .build();
     }
 
