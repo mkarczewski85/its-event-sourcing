@@ -36,7 +36,7 @@ public class IssueCommandController {
 
     @PutMapping("/{uuid}/status")
     @PreAuthorize("hasRole('ROLE_TECHNICIAN')")
-    public IssueCommandResponseDto updateIssueStatus(@PathVariable final UUID uuid,
+    public IssueCommandResponseDto updateIssueStatus(@PathVariable("uuid") final UUID uuid,
                                                      @RequestBody @Valid @NotNull final UpdateIssueStatusRequestDto request) {
         request.setUuid(uuid);
         Command command = commandMappingComponent.toCommand(request);
@@ -46,7 +46,7 @@ public class IssueCommandController {
 
     @PatchMapping("/{uuid}")
     @PreAuthorize("hasRole('ROLE_TECHNICIAN')")
-    public IssueCommandResponseDto patchIssue(@PathVariable final UUID uuid,
+    public IssueCommandResponseDto patchIssue(@PathVariable("uuid") final UUID uuid,
                                               @RequestBody @Valid @NotNull final PatchIssueRequestDto request) {
         request.setUuid(uuid);
         Collection<Command> commands = commandMappingComponent.toCommands(request);
@@ -58,7 +58,7 @@ public class IssueCommandController {
 
     @PostMapping("/{uuid}/assign")
     @PreAuthorize("hasRole('ROLE_TECHNICIAN')")
-    public IssueCommandResponseDto assignIssue(@PathVariable final UUID uuid,
+    public IssueCommandResponseDto assignIssue(@PathVariable("uuid") final UUID uuid,
                                                @RequestBody @Valid @NotNull final AssignIssueRequestDto request) {
         request.setUuid(uuid);
         Command commands = commandMappingComponent.toCommand(request);
@@ -68,7 +68,7 @@ public class IssueCommandController {
 
     @PostMapping("/{uuid}/comments")
     @PreAuthorize("hasRole('ROLE_TECHNICIAN') or hasRole('ROLE_REPORTER')")
-    public IssueCommandResponseDto publishIssueComment(@PathVariable final UUID uuid,
+    public IssueCommandResponseDto publishIssueComment(@PathVariable("uuid") final UUID uuid,
                                                        @RequestBody @Valid @NotNull final PublishCommentRequestDto request) {
         request.setUuid(uuid);
         Command commands = commandMappingComponent.toCommand(request);

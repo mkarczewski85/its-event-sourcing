@@ -1,6 +1,7 @@
 package com.karczewski.its.es.app.domain.event;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.karczewski.its.es.core.domain.event.Event;
 import jakarta.annotation.Nonnull;
 import lombok.Builder;
@@ -18,7 +19,10 @@ public class IssueReassignedEvent extends Event {
 
     @JsonCreator
     @Builder
-    public IssueReassignedEvent(UUID aggregateId, int version, UUID assignedTo, UUID assignedBy) {
+    public IssueReassignedEvent(@JsonProperty("aggregateId") UUID aggregateId,
+                                @JsonProperty("version") int version,
+                                @JsonProperty("assignedTo") UUID assignedTo,
+                                @JsonProperty("assignedBy") UUID assignedBy) {
         super(aggregateId, version);
         this.assignedTo = assignedTo;
         this.assignedBy = assignedBy;

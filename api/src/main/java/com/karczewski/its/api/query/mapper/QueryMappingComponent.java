@@ -28,6 +28,7 @@ public class QueryMappingComponent {
                 .reportedBy(toDto(issueProjection.getReportedBy()))
                 .assignedTo(toDto(issueProjection.getAssignedTo()))
                 .reportedAt(issueProjection.getReportedAt())
+                .updatedAt(issueProjection.getUpdatedAt())
                 .build();
     }
 

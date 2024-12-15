@@ -1,6 +1,7 @@
 package com.karczewski.its.es.app.domain.event;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.karczewski.its.es.core.domain.event.Event;
 import jakarta.annotation.Nonnull;
 import lombok.Builder;
@@ -17,7 +18,9 @@ public class IssueCancelledEvent extends Event {
 
     @JsonCreator
     @Builder
-    public IssueCancelledEvent(UUID aggregateId, int version, UUID cancelledBy) {
+    public IssueCancelledEvent(@JsonProperty("aggregateId") UUID aggregateId,
+                               @JsonProperty("version") int version,
+                               @JsonProperty("cancelledBy") UUID cancelledBy) {
         super(aggregateId, version);
         this.cancelledBy = cancelledBy;
     }

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class ReportIssueRequestDto {
 
     @NotBlank
-    @Size(max = 256)
+    @Size(max = 150)
     private String title;
     @NotBlank
     @Size(max = 2500)

@@ -3,6 +3,7 @@ package com.karczewski.its.api.query.dto;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.UUID;
 
 @Builder
@@ -14,7 +15,9 @@ public record IssueProjectionDto(
     String severity,
     String type,
     LocalDateTime reportedAt,
+    LocalDateTime updatedAt,
     UserDto reportedBy,
-    UserDto assignedTo
+    UserDto assignedTo,
+    Collection<AttachmentDto> attachments
 ) {
 }
