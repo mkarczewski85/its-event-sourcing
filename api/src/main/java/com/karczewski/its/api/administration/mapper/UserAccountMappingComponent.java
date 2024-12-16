@@ -2,12 +2,27 @@ package com.karczewski.its.api.administration.mapper;
 
 import com.karczewski.its.api.administration.dto.DepartmentDto;
 import com.karczewski.its.api.administration.dto.UserAccountDto;
+import com.karczewski.its.security.authentication.AuthenticationClient;
+import com.karczewski.its.user.dto.UserFilters;
 import com.karczewski.its.user.entity.Department;
 import com.karczewski.its.user.entity.UserAccount;
+import com.karczewski.its.user.entity.UserRole;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class UserAccountMappingComponent {
+
+    private final AuthenticationClient authenticationClient;
+
+    public UserFilters getAvailableTechniciansFilters() {
+        return UserFilters.builder()
+                .userRole(UserRole.TECHNICIAN.name())
+                .excludedUuid(authenticationClient.getLoggedUserUuid())
+                .isActive(true)
+                .build();
+    }
 
     public UserAccountDto toDto(UserAccount userAccount) {
         return UserAccountDto.builder()

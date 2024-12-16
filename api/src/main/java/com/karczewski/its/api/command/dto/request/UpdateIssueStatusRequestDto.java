@@ -1,6 +1,6 @@
 package com.karczewski.its.api.command.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,9 +14,9 @@ import java.util.UUID;
 @NoArgsConstructor
 public class UpdateIssueStatusRequestDto {
 
-    @NotBlank
+    @NotNull
     private UUID uuid;
-    @NotBlank
+    @NotNull
     private IssueUpdateStatus status;
 
     public enum IssueUpdateStatus {

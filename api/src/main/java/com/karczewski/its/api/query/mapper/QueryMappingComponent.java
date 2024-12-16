@@ -72,6 +72,8 @@ public class QueryMappingComponent {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
+                .department(user.getDepartment().getName())
+                .location(user.getDepartment().getLocation())
                 .build();
     }
 

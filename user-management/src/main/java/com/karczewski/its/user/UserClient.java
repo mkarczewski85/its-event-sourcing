@@ -17,6 +17,8 @@ public interface UserClient {
 
     Page<UserAccount> getUserAccounts(UserFilters filters, int offset, int limit);
 
+    Collection<UserAccount> getUserAccounts(UserFilters filters);
+
     Collection<Department> getAllUserDepartments();
 
     Optional<UserAccount> findByEmail(String email);

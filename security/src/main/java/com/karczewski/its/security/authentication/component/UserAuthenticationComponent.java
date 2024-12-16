@@ -49,6 +49,7 @@ public class UserAuthenticationComponent {
         authenticationToken.setId(user.getId().toString());
         authenticationToken.setFirstName(user.getFirstName());
         authenticationToken.setLastName(user.getLastName());
+        authenticationToken.setDepartment(user.getDepartment().getName());
         return authenticationToken;
     }
 

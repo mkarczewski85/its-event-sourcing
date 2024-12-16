@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.UUID;
 
 @Component
 public class UserSpecificationComponent {
@@ -19,7 +18,7 @@ public class UserSpecificationComponent {
     private static final String FIRST_NAME_FIELD_NAME = "firstName";
     private static final String LAST_NAME_FIELD_NAME = "lastName";
     private static final String EMAIL_FIELD_NAME = "email";
-    public static final String UUID_FIELD_NAME = "uuid";
+    public static final String ID_FIELD_NAME = "id";
     public static final String ROLE_FIELD_NAME = "role";
     public static final String IS_ACTIVE_FIELD_NAME = "isActive";
 
@@ -39,6 +38,7 @@ public class UserSpecificationComponent {
         addNamePhrasePredicateIfProvided(filters, criteriaBuilder, root, predicates);
         addEmailPhrasePredicateIfProvided(filters, criteriaBuilder, root, predicates);
         addUuidPredicateIfProvided(filters, criteriaBuilder, root, predicates);
+        addExcludedUuidPredicateIfProvided(filters, criteriaBuilder, root, predicates);
         addRolePredicateIfProvided(filters, criteriaBuilder, root, predicates);
         addIsActivePredicateIfProvided(filters, criteriaBuilder, root, predicates);
     }
@@ -69,7 +69,16 @@ public class UserSpecificationComponent {
                                                    final Root<UserAccount> root,
                                                    final Collection<Predicate> predicates) {
         if (filters.getUuid() == null) return;
-        final Predicate uuidEqualPredicate = criteriaBuilder.equal(root.get(UUID_FIELD_NAME), UUID.fromString(filters.getUuid()));
+        final Predicate uuidEqualPredicate = criteriaBuilder.equal(root.get(ID_FIELD_NAME), filters.getUuid());
+        predicates.add(uuidEqualPredicate);
+    }
+
+    private static void addExcludedUuidPredicateIfProvided(final UserFilters filters,
+                                                           final CriteriaBuilder criteriaBuilder,
+                                                           final Root<UserAccount> root,
+                                                           final Collection<Predicate> predicates) {
+        if (filters.getExcludedUuid() == null) return;
+        final Predicate uuidEqualPredicate = criteriaBuilder.notEqual(root.get(ID_FIELD_NAME), filters.getExcludedUuid());
         predicates.add(uuidEqualPredicate);
     }
 

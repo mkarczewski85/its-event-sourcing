@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,6 +27,11 @@ public class UserQueryComponent {
         final PageRequest pageRequest = PageRequest.of(--pageNo, limit, Sort.by(Sort.Direction.ASC, "lastName"));
         final Specification<UserAccount> specification = specificationComponent.getUserSpecification(filters);
         return userRepository.findAll(specification, pageRequest);
+    }
+
+    public Collection<UserAccount> getUsers(final UserFilters filters) {
+        final Specification<UserAccount> specification = specificationComponent.getUserSpecification(filters);
+        return userRepository.findAll(specification);
     }
 
     public Optional<UserAccount> findByEmail(final String email) {

@@ -32,6 +32,10 @@ public class User {
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "department_id")
+    private UserDepartment department;
+
     @OneToMany(mappedBy = "assignedTo", fetch = FetchType.LAZY)
     private Collection<IssueProjection> assigned;
 

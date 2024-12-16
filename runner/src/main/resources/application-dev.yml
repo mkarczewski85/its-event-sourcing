@@ -9,6 +9,9 @@ spring:
     username: postgres
     password: postgres
   jpa:
+    properties:
+      hibernate:
+        format_sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: validate
@@ -38,9 +41,17 @@ event-sourcing:
     polling-initial-delay: PT1S
     polling-interval: PT1S
 
-
 ### issue assignments
 issues:
   assigment:
     polling-interval: PT2M
     polling-initial-delay: PT2M
+
+#logging:
+#  level:
+#    org.hibernate.SQL: DEBUG
+#    org:
+#      hibernate:
+#        orm:
+#          jdbc:
+#            bind: TRACE

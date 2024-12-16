@@ -40,6 +40,12 @@ public class UserService implements UserClient {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Collection<UserAccount> getUserAccounts(UserFilters filters) {
+        return queryComponent.getUsers(filters);
+    }
+
+    @Override
     public Collection<Department> getAllUserDepartments() {
         return departmentRepository.findAll();
     }

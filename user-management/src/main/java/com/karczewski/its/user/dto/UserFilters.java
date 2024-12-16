@@ -5,13 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
 public class UserFilters {
 
-    private String uuid;
+    private UUID uuid;
+    private UUID excludedUuid;
     private String namePhrase;
     private String emailPhrase;
     private String userRole;
