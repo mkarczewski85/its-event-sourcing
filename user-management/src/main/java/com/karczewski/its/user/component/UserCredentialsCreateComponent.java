@@ -54,6 +54,13 @@ public class UserCredentialsCreateComponent {
         userCredentials.setPasswordHash(passwordHash);
         userCredentials.setSalt(base64Salt);
     }
+    public void recreateUserCredentials(UserCredentials userCredentials, String newPassword) {
+        byte[] salt = generateSecureRandomSalt();
+        String base64Salt = Base64.getEncoder().encodeToString(salt);
+        String passwordHash = generateSaltedHash(newPassword, salt);
+        userCredentials.setPasswordHash(passwordHash);
+        userCredentials.setSalt(base64Salt);
+    }
 
     private byte[] generateSecureRandomSalt() {
         return SecureRandom.getSeed(NUMBER_OF_SALT_BYTES);

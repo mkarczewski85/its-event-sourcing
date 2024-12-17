@@ -3,6 +3,7 @@ package com.karczewski.its.user;
 import com.karczewski.its.user.dto.CreateUserRequestDto;
 import com.karczewski.its.user.dto.PatchUserRequestDto;
 import com.karczewski.its.user.dto.UserFilters;
+import com.karczewski.its.user.dto.UserPasswordChangeRequestDto;
 import com.karczewski.its.user.entity.Department;
 import com.karczewski.its.user.entity.UserAccount;
 import com.karczewski.its.user.entity.UserCredentials;
@@ -28,6 +29,8 @@ public interface UserClient {
     UserAccount patchUserAccount(UUID uuid, PatchUserRequestDto reqDTO);
 
     UserAccount resetUserCredentials(UUID uuid);
+
+    void changeUserPassword(UUID uuid, UserPasswordChangeRequestDto dto);
 
     UserAccount getUserAccount(UUID uuid);
 

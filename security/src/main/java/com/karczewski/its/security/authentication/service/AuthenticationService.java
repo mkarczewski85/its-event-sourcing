@@ -1,11 +1,11 @@
 package com.karczewski.its.security.authentication.service;
 
 import com.karczewski.its.security.authentication.AuthenticationClient;
+import com.karczewski.its.security.authentication.component.AuthenticatedUserInfoComponent;
+import com.karczewski.its.security.authentication.component.UserAuthenticationComponent;
 import com.karczewski.its.security.authentication.dto.JWTokenDto;
 import com.karczewski.its.security.authentication.dto.LoggedUserDto;
 import com.karczewski.its.security.authentication.dto.UserLoginPasswordDto;
-import com.karczewski.its.security.authentication.component.AuthenticatedUserInfoComponent;
-import com.karczewski.its.security.authentication.component.UserAuthenticationComponent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,4 +32,5 @@ public class AuthenticationService implements AuthenticationClient {
     public UUID getLoggedUserUuid() {
         return this.getLoggedUserDetails().id();
     }
+
 }

@@ -5,6 +5,7 @@ import com.karczewski.its.user.component.*;
 import com.karczewski.its.user.dto.CreateUserRequestDto;
 import com.karczewski.its.user.dto.PatchUserRequestDto;
 import com.karczewski.its.user.dto.UserFilters;
+import com.karczewski.its.user.dto.UserPasswordChangeRequestDto;
 import com.karczewski.its.user.entity.Department;
 import com.karczewski.its.user.entity.UserAccount;
 import com.karczewski.its.user.entity.UserCredentials;
@@ -32,6 +33,7 @@ public class UserService implements UserClient {
     private final UserCredentialsCreateComponent credentialsCreateComponent;
     private final UserPatchComponent patchComponent;
     private final DeactivateUserComponent deactivateComponent;
+    private final UserPasswordChangeComponent userPasswordChangeComponent;
 
     @Override
     @Transactional(readOnly = true)
@@ -74,6 +76,12 @@ public class UserService implements UserClient {
         UserAccount user = queryComponent.getByUUID(uuid);
         credentialsCreateComponent.recreateUserCredentials(user);
         return user;
+    }
+
+    @Override
+    @Transactional
+    public void changeUserPassword(UUID uuid, UserPasswordChangeRequestDto dto) {
+        userPasswordChangeComponent.updateUserCredentials(uuid, dto);
     }
 
     @Override
