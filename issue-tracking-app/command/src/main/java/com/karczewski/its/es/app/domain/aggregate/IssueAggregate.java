@@ -173,32 +173,38 @@ public class IssueAggregate extends Aggregate {
     public void apply(IssueReassignedEvent event) {
         this.assignedTo = new UserId(event.getAssignedTo());
         this.assignedAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void apply(IssueAssignedEvent event) {
         this.issueStatus = IssueStatus.ASSIGNED;
         this.assignedTo = new UserId(event.getAssignedTo());
         this.assignedAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void apply(IssueAcceptedEvent event) {
         this.issueStatus = IssueStatus.IN_PROGRESS;
         this.acceptedAt = event.getCreatedDate();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void apply(IssueRejectedEvent event) {
         this.issueStatus = IssueStatus.REJECTED;
         this.completedAt = event.getCreatedDate();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void apply(IssueCancelledEvent event) {
         this.issueStatus = IssueStatus.CANCELLED;
         this.completedAt = event.getCreatedDate();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void apply(IssueResolvedEvent event) {
         this.issueStatus = IssueStatus.RESOLVED;
         this.completedAt = event.getCreatedDate();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void apply(IssueSeverityUpdatedEvent event) {
@@ -209,6 +215,7 @@ public class IssueAggregate extends Aggregate {
     public void apply(IssueTypeUpdatedEvent event) {
         this.issueType = IssueType.getByName(event.getIssueType());
         this.updatedAt = event.getCreatedDate();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void apply(IssueCommentedEvent event) {

@@ -28,6 +28,7 @@ public class JWTUtilityComponent implements InitializingBean {
     private static final String FIRST_NAME_KEY = "first_name";
     private static final String LAST_NAME_KEY = "last_name";
     private static final String DEPARTMENT_KEY = "department";
+    private static final String LOCATION_KEY = "location";
 
     @Value("${jwt.base64-secret}")
     private String base64Secret;
@@ -56,6 +57,7 @@ public class JWTUtilityComponent implements InitializingBean {
                 .claim(FIRST_NAME_KEY, authentication.getFirstName())
                 .claim(LAST_NAME_KEY, authentication.getLastName())
                 .claim(DEPARTMENT_KEY, authentication.getDepartment())
+                .claim(LOCATION_KEY, authentication.getLocation())
                 .signWith(jwtSecretKey)
                 .expiration(validity)
                 .compact();
@@ -73,10 +75,12 @@ public class JWTUtilityComponent implements InitializingBean {
         final String firstName = claims.get(FIRST_NAME_KEY).toString();
         final String lastName = claims.get(LAST_NAME_KEY).toString();
         final String department = claims.get(DEPARTMENT_KEY).toString();
+        final String location = claims.get(LOCATION_KEY).toString();
         authentication.setId(id);
         authentication.setFirstName(firstName);
         authentication.setLastName(lastName);
         authentication.setDepartment(department);
+        authentication.setLocation(location);
         return authentication;
     }
 

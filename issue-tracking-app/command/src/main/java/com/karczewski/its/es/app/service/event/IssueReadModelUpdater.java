@@ -56,6 +56,7 @@ public class IssueReadModelUpdater implements SyncEventHandler {
                 .reportedAt(aggregate.getReportedAt())
                 .reportedBy(aggregate.getReportedBy())
                 .assignedTo(aggregate.getAssignedTo())
+                .updatedAt(aggregate.getUpdatedAt())
                 .build();
     }
 

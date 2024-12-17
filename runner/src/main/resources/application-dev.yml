@@ -15,7 +15,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: validate
-    show-sql: false
+    show-sql: true
   ### Email sender config (test)
 #  mail:
 #    host: <email_server>
@@ -47,11 +47,11 @@ issues:
     polling-interval: PT2M
     polling-initial-delay: PT2M
 
-#logging:
-#  level:
-#    org.hibernate.SQL: DEBUG
-#    org:
-#      hibernate:
-#        orm:
-#          jdbc:
-#            bind: TRACE
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org:
+      hibernate:
+        orm:
+          jdbc:
+            bind: TRACE
