@@ -93,6 +93,7 @@ export default {
       }
     },
     close() {
+      this.selectedUserId = null;
       this.localOpen = false;
     },
     confirm() {

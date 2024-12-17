@@ -7,7 +7,7 @@ const formatSeverityChipColor = (severity) => {
     return severityColors[severity] || 'default'; // 'default' as fallback
 };
 
-const formatDate = (date) => {
+export const formatDate = (date) => {
     const options = {
         year: 'numeric',
         month: 'long',

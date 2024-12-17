@@ -10,18 +10,21 @@ import { createRouter, createWebHistory } from 'vue-router/auto'
 // import { routes } from 'vue-router/auto-routes'
 import Login from '../components/Login.vue';
 import ResetPassword from '../components/ResetPassword.vue';
-import ChangePassword from '../components/ChangePassword.vue';
+import AccountSettings from '../components/AccountSettings.vue';
 import AddIssue from '../components/AddIssue.vue';
 import IssueList from '../components/IssueList.vue';
 import IssueDetails from '../components/IssueDetails.vue';
+import PageNotFound from "../components/PageNotFound.vue";
 
 const routes = [
-  { path: '/', name: 'Login', component: Login },
-  { path: '/reset-password', name: 'ResetPassword', component: ResetPassword },
-  { path: '/change-password', name: 'ChangePassword', component: ChangePassword },
-  { path: '/add-issue', name: 'AddIssue', component: AddIssue },
-  { path: '/issues', name: 'IssueList', component: IssueList },
-  { path: '/issues/:id', name: 'IssueDetails', component: IssueDetails }
+  {path: '/', name: 'Login', component: Login},
+  {path: '/reset-password', name: 'ResetPassword', component: ResetPassword},
+  {path: '/settings', name: 'AccountSettings', component: AccountSettings},
+  {path: '/add-issue', name: 'AddIssue', component: AddIssue},
+  {path: '/issues', name: 'IssueList', component: IssueList},
+  {path: '/issues/:id', name: 'IssueDetails', component: IssueDetails},
+  {path: '/page-not-found', name: 'PageNotFound', component: IssueDetails},
+  {path: '/:pathMatch(.*)*', name: 'NotFound', component: PageNotFound }
 ]
 
 const router = createRouter({

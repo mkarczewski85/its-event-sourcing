@@ -1,17 +1,21 @@
 <template>
   <v-toolbar density="compact">
-    <v-btn icon @click="showAccountDetails">
+    <v-btn icon @click="toggleDrawer">
       <v-icon>mdi-account-details</v-icon>
     </v-btn>
-    <v-toolbar-title>{{ userName }} ({{ department }})</v-toolbar-title>
+
     <v-spacer></v-spacer>
     <v-btn v-if="role === 'REPORTER'" @click="goToAddIssue" variant="outlined" prepend-icon="mdi-bug">
       Zgłoszenie
+    </v-btn>
+    <v-btn icon @click="refresh">
+      <v-icon>mdi-refresh</v-icon>
     </v-btn>
     <v-btn icon @click="logout">
       <v-icon>mdi-logout</v-icon>
     </v-btn>
   </v-toolbar>
+  <navigation-drawer v-model:drawer="drawer" />
   <v-container class="d-flex justify-center">
     <v-data-table-server
         :headers="headers"
@@ -25,8 +29,8 @@
         density="compact"
         class="elevation-1"
         hover
-        @update:options="loadIssues"
-    >
+        @update:options="loadIssues">
+
       <template v-slot:top>
         <v-toolbar rounded>
           <v-toolbar-title>Filtry</v-toolbar-title>
@@ -110,6 +114,7 @@
 <script>
 import Dictionary from '@/components/utils/dictionary.js'
 import Formatter from '@/components/utils/formatter.js'
+import NavigationDrawer from "@/components/NavigationDrawer.vue";
 
 const API = {
   async fetchIssues({ page, itemsPerPage, sortBy, filters, path, axios }) {
@@ -129,6 +134,7 @@ const API = {
 };
 
 export default {
+  components: { NavigationDrawer },
   computed: {
     Dictionary() {
       return Dictionary
@@ -166,8 +172,7 @@ export default {
       sortBy: 'reportedAt',
       loading: false,
       role: localStorage.getItem('role'),
-      userName: localStorage.getItem('fullName'),
-      department: localStorage.getItem('department')
+      drawer: false
     };
   },
   methods: {
@@ -197,8 +202,11 @@ export default {
     goToAddIssue() {
       this.navigateTo('/add-issue');
     },
-    showAccountDetails() {
-      console.log('show account');
+    toggleDrawer() {
+      this.drawer = !this.drawer
+    },
+    refresh() {
+      this.loadIssues();
     },
     logout() {
       console.log('logout');

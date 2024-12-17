@@ -17,7 +17,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" :disabled="isConfirmBtnDisabled" prepend-icon="mdi-content-save" @click="handleUpdate">Zapisz</v-btn>
+        <v-btn color="primary" :disabled="confirmBtnDisabled" prepend-icon="mdi-content-save" @click="handleUpdate">Zapisz</v-btn>
         <v-btn color="secondary" prepend-icon="mdi-cancel" @click="close">Anuluj</v-btn>
       </v-card-actions>
     </v-card>
@@ -50,7 +50,7 @@ export default {
   emits: ["update:isOpen", "confirm"],
   data() {
     return {
-      updatedValue: null,
+      confirmBtnDisabled: true,
       localSelectedOption: this.currentOption
     };
   },
@@ -101,14 +101,13 @@ export default {
         if (this.updatedElement === 'status') return '';
         return this.currentState[this.updatedElement];
       }
-    },
-    isConfirmBtnDisabled: {
-      get() {
-        return this.localSelectedOption === this.currentOption || this.localSelectedOption === null;
-      }
     }
   },
   methods: {
+    handleValueSelect() {
+      this.confirmBtnDisabled = this.localSelectedOption === this.currentOption ||
+               this.localSelectedOption === null;
+    },
     handleUpdate() {
       if (this.updatedElement === 'status') {
         this.handleStatusUpdate();
@@ -145,11 +144,15 @@ export default {
     },
     close() {
       this.localOpen = false;
+      this.localSelectedOption = null;
     },
     confirm() {
       this.$emit("confirm");
       this.close();
     },
+  },
+  watch: {
+    localSelectedOption: 'handleValueSelect'
   }
 };
 </script>

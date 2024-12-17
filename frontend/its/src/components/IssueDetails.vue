@@ -3,8 +3,10 @@
     <v-btn icon @click="goBack">
       <v-icon>mdi-arrow-left</v-icon>
     </v-btn>
-    <v-toolbar-title>{{ userName }} ({{ department }})</v-toolbar-title>
     <v-spacer></v-spacer>
+    <v-btn icon @click="refresh">
+      <v-icon>mdi-refresh</v-icon>
+    </v-btn>
     <v-btn icon @click="logout">
       <v-icon>mdi-logout</v-icon>
     </v-btn>
@@ -50,6 +52,7 @@
               <v-icon
                   v-else-if="role === 'REPORTER'"
                   size="x-small"
+                  @click="handleUserInfo"
               >mdi-information-outline</v-icon>
             </div>
             <div v-if="issue?.updatedAt">
@@ -170,6 +173,10 @@
         </v-row>
       </v-card-text>
     </v-card>
+    <issue-comment-section ref="issueCommentSection"
+                           :issue-id="issue?.uuid"
+                           :is-issue-closed="['RESOLVED', 'CANCELLED', 'REJECTED'].includes(issue?.status)">
+    </issue-comment-section>
   </v-container>
   <edit-issue-dialog :isOpen="editDialogOpen"
                      :updated-element="selectedChip"
@@ -198,12 +205,14 @@ import Formatter from "@/components/utils/formatter.js";
 import EditIssueDialog from "@/components/EditIssueDialog.vue";
 import EditAssignmentDialog from "@/components/EditAssignmentDialog.vue";
 import UserInfoDialog from "@/components/UserInfoDialog.vue";
+import IssueCommentSection from "@/components/IssueCommentSection.vue";
 
 export default {
   components: {
     EditIssueDialog,
     UserInfoDialog,
-    EditAssignmentDialog
+    EditAssignmentDialog,
+    IssueCommentSection
   },
   computed: {
     Dictionary() {
@@ -263,6 +272,10 @@ export default {
     },
     goBack() {
       this.$router.push("/issues");
+    },
+    refresh() {
+      this.fetchIssueDetails();
+      this.$refs.issueCommentSection.refreshComments();
     },
     logout() {
       console.log('logout');

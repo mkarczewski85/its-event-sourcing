@@ -3,7 +3,6 @@
     <v-btn icon @click="goBack">
       <v-icon>mdi-arrow-left</v-icon>
     </v-btn>
-    <v-toolbar-title>{{ userName }} ({{ department }})</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-btn icon @click="logout">
       <v-icon>mdi-logout</v-icon>
