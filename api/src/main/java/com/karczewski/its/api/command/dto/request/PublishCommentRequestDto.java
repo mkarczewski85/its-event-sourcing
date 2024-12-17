@@ -1,8 +1,6 @@
 package com.karczewski.its.api.command.dto.request;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,11 +14,10 @@ import java.util.UUID;
 @NoArgsConstructor
 public class PublishCommentRequestDto {
 
-    @NotBlank
+    @NotNull
     private UUID uuid;
     @NotBlank
-    @Min(2)
-    @Max(1024)
+    @Size(max = 1048)
     private String content;
 
 }

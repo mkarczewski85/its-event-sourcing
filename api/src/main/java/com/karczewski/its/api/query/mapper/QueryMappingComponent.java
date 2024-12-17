@@ -46,7 +46,7 @@ public class QueryMappingComponent {
     public IssueCommentDto toDto(IssueComment issueComment) {
         return IssueCommentDto.builder()
                 .content(issueComment.getContent())
-                .authoredBy(toDto(issueComment.getAuthoredBy()))
+                .authoredBy(issueComment.getAuthoredBy().getFirstName() + " " + issueComment.getAuthoredBy().getLastName())
                 .publishedAt(issueComment.getPublishedAt())
                 .build();
     }

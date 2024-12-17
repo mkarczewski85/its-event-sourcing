@@ -69,8 +69,8 @@ public class IssueQueryController {
     @PreAuthorize("hasRole('ROLE_REPORTER') or hasRole('ROLE_TECHNICIAN')")
     public PageWrapper<IssueCommentDto> getIssueComments(
             @PathVariable("uuid") final UUID uuid,
-            @RequestParam(defaultValue = "0") @Min(0) final int offset,
-            @RequestParam(defaultValue = "20") @Min(20) final int limit
+            @RequestParam(name = "offset", defaultValue = "0") @Min(0) final int offset,
+            @RequestParam(name = "limit", defaultValue = "20") @Min(5) final int limit
     ) {
         return PageWrapper.from(issueProjectionQueryClient.getIssueComments(uuid, offset, limit)
                 .map(queryMappingComponent::toDto));

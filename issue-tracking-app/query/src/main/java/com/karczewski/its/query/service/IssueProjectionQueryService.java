@@ -73,7 +73,7 @@ public class IssueProjectionQueryService implements IssueProjectionQueryClient {
                 .orElseThrow(() -> new IssueNotFoundException("Unable to find issue with uuid: " + uuid));
         permissionValidator.validateUserPermission(issueProjection, authenticationClient.getLoggedUserUuid());
         int pageNo = (limit + offset) / limit;
-        PageRequest pageRequest = PageRequest.of(--pageNo, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
+        PageRequest pageRequest = PageRequest.of(--pageNo, limit, Sort.by(Sort.Direction.DESC, "publishedAt"));
         return issueCommentRepository.findAllByIssue(issueProjection, pageRequest);
     }
 

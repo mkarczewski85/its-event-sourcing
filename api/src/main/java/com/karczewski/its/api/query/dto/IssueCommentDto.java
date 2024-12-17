@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Builder
 public record IssueCommentDto(
         String content,
-        UserDto authoredBy,
+        String authoredBy,
         LocalDateTime publishedAt
 ) {
 }

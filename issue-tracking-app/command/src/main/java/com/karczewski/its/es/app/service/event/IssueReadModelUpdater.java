@@ -2,6 +2,7 @@ package com.karczewski.its.es.app.service.event;
 
 import com.karczewski.its.es.app.domain.aggregate.AggregateType;
 import com.karczewski.its.es.app.domain.aggregate.IssueAggregate;
+import com.karczewski.its.es.app.domain.event.EventType;
 import com.karczewski.its.es.app.domain.event.IssueCommentedEvent;
 import com.karczewski.its.es.app.service.utility.CastingUtility;
 import com.karczewski.its.es.core.domain.aggregate.Aggregate;
@@ -33,7 +34,7 @@ public class IssueReadModelUpdater implements SyncEventHandler {
         issueProjectionClient.updateIssueProjection(issueProjectionUpdateModel);
         events.stream()
                 .map(EventWithId::event)
-                .filter(event -> event.isTypeOf(IssueCommentedEvent.class.getTypeName()))
+                .filter(event -> event.isTypeOf(EventType.ISSUE_COMMENTED.name()))
                 .map(event -> mapToModel(CastingUtility.safeCast(event, IssueCommentedEvent.class)))
                 .forEach(issueProjectionClient::addIssueComment);
     }
