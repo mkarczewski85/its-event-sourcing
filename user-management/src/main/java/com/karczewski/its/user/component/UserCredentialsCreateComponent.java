@@ -48,11 +48,7 @@ public class UserCredentialsCreateComponent {
     public void recreateUserCredentials(UserAccount user) {
         String newPassword = passwordGenerateComponent.generatePassword(PASSWORD_RULES);
         UserCredentials userCredentials = user.getUserCredentials();
-        byte[] salt = generateSecureRandomSalt();
-        String base64Salt = Base64.getEncoder().encodeToString(salt);
-        String passwordHash = generateSaltedHash(newPassword, salt);
-        userCredentials.setPasswordHash(passwordHash);
-        userCredentials.setSalt(base64Salt);
+        recreateUserCredentials(userCredentials, newPassword);
     }
     public void recreateUserCredentials(UserCredentials userCredentials, String newPassword) {
         byte[] salt = generateSecureRandomSalt();

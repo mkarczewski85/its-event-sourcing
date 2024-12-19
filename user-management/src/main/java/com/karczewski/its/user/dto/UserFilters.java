@@ -16,7 +16,7 @@ public class UserFilters {
     private UUID uuid;
     private UUID excludedUuid;
     private String namePhrase;
-    private String emailPhrase;
+    private UUID department;
     private String userRole;
     private Boolean isActive;
 

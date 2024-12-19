@@ -185,7 +185,7 @@ export default {
       }
 
       try {
-        await this.$axios.post('/api/secured/me/password-change', {
+        await this.$axios.post('/api/secured/password-change', {
           oldPassword: this.password.oldPassword,
           newPassword: this.password.newPassword,
         });
@@ -214,7 +214,7 @@ export default {
     logout() {
       console.log('logout');
       localStorage.clear();
-      this.navigateTo('/');
+      this.$router.push('/');
     },
   },
   created() {

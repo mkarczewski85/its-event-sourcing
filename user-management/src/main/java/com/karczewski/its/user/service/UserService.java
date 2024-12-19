@@ -2,18 +2,14 @@ package com.karczewski.its.user.service;
 
 import com.karczewski.its.user.UserClient;
 import com.karczewski.its.user.component.*;
-import com.karczewski.its.user.dto.CreateUserRequestDto;
-import com.karczewski.its.user.dto.PatchUserRequestDto;
-import com.karczewski.its.user.dto.UserFilters;
-import com.karczewski.its.user.dto.UserPasswordChangeRequestDto;
-import com.karczewski.its.user.entity.Department;
-import com.karczewski.its.user.entity.UserAccount;
-import com.karczewski.its.user.entity.UserCredentials;
-import com.karczewski.its.user.entity.UserRole;
+import com.karczewski.its.user.dto.*;
+import com.karczewski.its.user.entity.*;
+import com.karczewski.its.user.notification.EmailNotificationService;
 import com.karczewski.its.user.repository.DepartmentRepository;
 import com.karczewski.its.user.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +30,8 @@ public class UserService implements UserClient {
     private final UserPatchComponent patchComponent;
     private final DeactivateUserComponent deactivateComponent;
     private final UserPasswordChangeComponent userPasswordChangeComponent;
+    private final UserAccountPasswordResetComponent userPasswordResetComponent;
+    private final EmailNotificationService emailNotificationService;
 
     @Override
     @Transactional(readOnly = true)
@@ -94,6 +92,20 @@ public class UserService implements UserClient {
     @Transactional
     public void deactivateUserAccount(UUID uuid) {
         deactivateComponent.deactivateUser(uuid);
+    }
+
+    @Override
+    @Async
+    public void sendPasswordResetToken(String email) {
+        Optional<UserAccount> userOpt = userAccountRepository.findByEmailAndIsActive(email, true);
+        if (userOpt.isEmpty()) return;
+        PasswordResetToken resetToken = userPasswordResetComponent.generatePasswordResetToken(userOpt.get());
+        emailNotificationService.sendPasswordResetEmail(email, resetToken.getToken());
+    }
+
+    @Override
+    public void resetUserPasswordByToken(ResetPasswordByTokenRequestDto dto) {
+        userPasswordResetComponent.setNewPasswordByResetToken(dto);
     }
 
     @Override

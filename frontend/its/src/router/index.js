@@ -15,9 +15,11 @@ import AddIssue from '../components/AddIssue.vue';
 import IssueList from '../components/IssueList.vue';
 import IssueDetails from '../components/IssueDetails.vue';
 import PageNotFound from "../components/PageNotFound.vue";
+import AdministrationPanel from "@/components/AdministrationPanel.vue";
 
 const routes = [
   {path: '/', name: 'Login', component: Login},
+  {path: '/administration', name: 'Administration', component: AdministrationPanel},
   {path: '/reset-password', name: 'ResetPassword', component: ResetPassword},
   {path: '/settings', name: 'AccountSettings', component: AccountSettings},
   {path: '/add-issue', name: 'AddIssue', component: AddIssue},

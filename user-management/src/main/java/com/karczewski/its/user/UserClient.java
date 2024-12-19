@@ -1,9 +1,6 @@
 package com.karczewski.its.user;
 
-import com.karczewski.its.user.dto.CreateUserRequestDto;
-import com.karczewski.its.user.dto.PatchUserRequestDto;
-import com.karczewski.its.user.dto.UserFilters;
-import com.karczewski.its.user.dto.UserPasswordChangeRequestDto;
+import com.karczewski.its.user.dto.*;
 import com.karczewski.its.user.entity.Department;
 import com.karczewski.its.user.entity.UserAccount;
 import com.karczewski.its.user.entity.UserCredentials;
@@ -35,6 +32,10 @@ public interface UserClient {
     UserAccount getUserAccount(UUID uuid);
 
     void deactivateUserAccount(UUID uuid);
+
+    void sendPasswordResetToken(String email);
+
+    void resetUserPasswordByToken(ResetPasswordByTokenRequestDto dto);
 
     boolean existsByUUIDAndRole(UUID uuid, UserRole role);
 

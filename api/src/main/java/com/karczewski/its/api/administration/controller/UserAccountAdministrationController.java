@@ -8,6 +8,7 @@ import com.karczewski.its.user.UserClient;
 import com.karczewski.its.user.dto.CreateUserRequestDto;
 import com.karczewski.its.user.dto.PatchUserRequestDto;
 import com.karczewski.its.user.dto.UserFilters;
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -32,9 +33,14 @@ public class UserAccountAdministrationController {
     private final UserAccountMappingComponent mappingComponent;
 
     @GetMapping
-    public PageWrapper<UserAccountDto> getPagedUserAccounts(@RequestParam(defaultValue = "0") @Min(0) final int offset,
-                                                            @RequestParam(defaultValue = "20") @Min(20) final int limit,
-                                                            @RequestBody(required = false) final UserFilters filters) {
+    public PageWrapper<UserAccountDto> getPagedUserAccounts(@RequestParam(defaultValue = "0", name = "offset") @Min(0) final int offset,
+                                                            @RequestParam(defaultValue = "20", name = "limit") @Min(10) final int limit,
+                                                            @Nullable @RequestParam(required = false, name = "id")  UUID id,
+                                                            @Nullable @RequestParam(required = false, name = "department")  UUID department,
+                                                            @Nullable @RequestParam(required = false, name = "namePhrase")  String namePhrase,
+                                                            @Nullable @RequestParam(required = false, name = "role")  String userRole,
+                                                            @Nullable @RequestParam(required = false, name = "active")  Boolean isActive) {
+        UserFilters filters = mappingComponent.toFilters(id, namePhrase, department, userRole, isActive);
         return PageWrapper.from(administrationClient.getUserAccounts(filters, offset, limit)
                 .map(mappingComponent::toDto));
     }

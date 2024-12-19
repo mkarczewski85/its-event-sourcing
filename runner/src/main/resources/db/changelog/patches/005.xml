@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="005-password-reset-token" author="mkarczewski">
+        <createTable tableName="password_reset_token">
+            <column autoIncrement="true" name="id" type="bigint">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="pk_reset_token"/>
+            </column>
+            <column name="user_credentials_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reset_token" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expired_at" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+                baseColumnNames="user_credentials_id"
+                baseTableName="password_reset_token"
+                constraintName="fk_reset_credentials_id"
+                onDelete="CASCADE"
+                referencedColumnNames="id"
+                referencedTableName="user_credentials"
+                validate="true"/>
+    </changeSet>
+    <changeSet id="006-user-settings" author="mkarczewski">
+        <createTable tableName="user_account_settings">
+            <column autoIncrement="true" name="id" type="bigint">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="pk_user_settings"/>
+            </column>
+            <column name="user_account_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="issue_notifications" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment_notifications" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+                baseColumnNames="user_account_id"
+                baseTableName="user_account_settings"
+                constraintName="fk_settings_user_id"
+                onDelete="CASCADE"
+                referencedColumnNames="id"
+                referencedTableName="user_accounts"
+                validate="true"/>
+    </changeSet>
+</databaseChangeLog>

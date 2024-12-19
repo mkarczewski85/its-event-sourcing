@@ -10,11 +10,23 @@ import com.karczewski.its.user.entity.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 @RequiredArgsConstructor
 public class UserAccountMappingComponent {
 
     private final AuthenticationClient authenticationClient;
+
+    public UserFilters toFilters(UUID id, String namePhrase, UUID department, String userRole, Boolean isActive) {
+        return UserFilters.builder()
+                .uuid(id)
+                .namePhrase(namePhrase)
+                .isActive(isActive)
+                .department(department)
+                .userRole(userRole)
+                .build();
+    }
 
     public UserFilters getAvailableTechniciansFilters() {
         return UserFilters.builder()

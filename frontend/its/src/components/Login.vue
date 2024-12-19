@@ -55,7 +55,7 @@
 
           <p class="mt-4">
             Nie pamiętasz hasła?
-            <router-link to="/password-reset" class="link">Resetuj hasło</router-link>
+            <router-link to="/reset-password" class="link">Resetuj hasło</router-link>
           </p>
         </v-form>
       </v-sheet>
@@ -101,7 +101,11 @@ export default {
         localStorage.setItem('department', userResponse.data.department);
         localStorage.setItem('fullName', [userResponse.data.firstName, userResponse.data.lastName].join(' '));
 
-        await router.push('/issues');
+        if (userResponse.data.role === 'ADMINISTRATOR') {
+          await router.push('/administration');
+        } else {
+          await router.push('/issues');
+        }
       } catch (e) {
         console.log(e);
         if (e.response?.data?.errors) {

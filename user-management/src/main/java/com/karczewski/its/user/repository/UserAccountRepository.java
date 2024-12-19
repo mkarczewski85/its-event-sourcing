@@ -17,6 +17,8 @@ public interface UserAccountRepository extends CrudRepository<UserAccount, UUID>
 
     Optional<UserAccount> findByEmail(String email);
 
+    Optional<UserAccount> findByEmailAndIsActive(String email, boolean isActive);
+
     boolean existsByEmail(String email);
     
     boolean existsByIdAndRole(UUID id, UserRole userRole);

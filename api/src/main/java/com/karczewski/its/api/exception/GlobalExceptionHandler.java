@@ -5,6 +5,7 @@ import com.karczewski.its.es.core.exception.AggregateStateException;
 import com.karczewski.its.es.core.exception.OptimisticConcurrencyControlException;
 import com.karczewski.its.query.exception.IssueNotFoundException;
 import com.karczewski.its.query.exception.QueryPermissionDeniedException;
+import com.karczewski.its.user.exception.InvalidPasswordResetTokenException;
 import com.karczewski.its.user.exception.UserAccountAlreadyExistsException;
 import com.karczewski.its.user.exception.UserAccountNotFoundException;
 import com.karczewski.its.user.exception.UserAccountPermissionDeniedException;
@@ -25,7 +26,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
-    @ExceptionHandler(value = { UserAccountAlreadyExistsException.class })
+    @ExceptionHandler(value = { UserAccountAlreadyExistsException.class, InvalidPasswordResetTokenException.class})
     protected ResponseEntity<Object> handleConflict(final RuntimeException ex, final WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
