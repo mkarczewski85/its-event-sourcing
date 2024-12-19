@@ -11,8 +11,6 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "spring.mail")
 public class EmailMessageProperties {
 
-    public final static String FROM_ACCOUNT = "m.karczewski1985@gmail.com";
-
     private String username;
 
 }

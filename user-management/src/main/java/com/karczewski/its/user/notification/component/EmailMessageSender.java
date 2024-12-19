@@ -21,7 +21,7 @@ public class EmailMessageSender {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         try {
-            helper.setFrom(EmailMessageProperties.FROM_ACCOUNT);
+            helper.setFrom(emailProperties.getUsername());
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(message, true);
