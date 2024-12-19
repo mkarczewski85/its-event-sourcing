@@ -39,7 +39,7 @@ public class UserSettingsController {
     }
 
     @PostMapping(PASSWORD_RESET_PATH)
-    public void resetUserPassword(@RequestBody @Valid final ResetPasswordByTokenRequestDto dto) {
+    public void resetUserPasswordByToken(@RequestBody @Valid final ResetPasswordByTokenRequestDto dto) {
         userClient.resetUserPasswordByToken(dto);
     }
 

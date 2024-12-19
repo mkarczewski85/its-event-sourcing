@@ -32,6 +32,7 @@ public class UserService implements UserClient {
     private final UserPasswordChangeComponent userPasswordChangeComponent;
     private final UserAccountPasswordResetComponent userPasswordResetComponent;
     private final EmailNotificationService emailNotificationService;
+    private final UserSettingsPatchComponent userSettingsPatchComponent;
 
     @Override
     @Transactional(readOnly = true)
@@ -59,13 +60,22 @@ public class UserService implements UserClient {
     @Override
     @Transactional
     public UserAccount createUserAccount(CreateUserRequestDto dto) {
-        return userCreateComponent.createUser(dto);
+        UserAccount user = userCreateComponent.createUser(dto);
+        UserCredentials userCredentials = user.getUserCredentials();
+        emailNotificationService.sendWelcomeEmail(user.getEmail(), userCredentials.getRawPassword());
+        return user;
     }
 
     @Override
     @Transactional
     public UserAccount patchUserAccount(UUID uuid, PatchUserRequestDto dto) {
         return patchComponent.patchUser(uuid, dto);
+    }
+
+    @Override
+    @Transactional
+    public void patchUserSettings(UUID uuid, PatchUserSettingsRequestDto dto) {
+        userSettingsPatchComponent.patchUserSettings(uuid, dto);
     }
 
     @Override

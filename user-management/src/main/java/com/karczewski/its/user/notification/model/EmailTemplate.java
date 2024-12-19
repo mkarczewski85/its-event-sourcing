@@ -13,8 +13,8 @@ public enum EmailTemplate {
                     + "<br><div>W celu zmiany hasła należy skorzystać z adresu:  <a href=\"%s\">%s</a>");
 
 
-    String message;
-    String subject;
+    final String message;
+    final String subject;
 
     EmailTemplate(final String subject, final String message) {
         this.message = message;

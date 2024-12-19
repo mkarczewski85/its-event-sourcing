@@ -10,6 +10,7 @@ import { createRouter, createWebHistory } from 'vue-router/auto'
 // import { routes } from 'vue-router/auto-routes'
 import Login from '../components/Login.vue';
 import ResetPassword from '../components/ResetPassword.vue';
+import ResetPasswordByToken from "@/components/ResetPasswordByToken.vue";
 import AccountSettings from '../components/AccountSettings.vue';
 import AddIssue from '../components/AddIssue.vue';
 import IssueList from '../components/IssueList.vue';
@@ -21,6 +22,7 @@ const routes = [
   {path: '/', name: 'Login', component: Login},
   {path: '/administration', name: 'Administration', component: AdministrationPanel},
   {path: '/reset-password', name: 'ResetPassword', component: ResetPassword},
+  {path: '/reset-password/:token', name: 'ResetPasswordByToken', component: ResetPasswordByToken},
   {path: '/settings', name: 'AccountSettings', component: AccountSettings},
   {path: '/add-issue', name: 'AddIssue', component: AddIssue},
   {path: '/issues', name: 'IssueList', component: IssueList},

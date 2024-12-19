@@ -25,6 +25,8 @@ public interface UserClient {
 
     UserAccount patchUserAccount(UUID uuid, PatchUserRequestDto reqDTO);
 
+    void patchUserSettings(UUID uuid, PatchUserSettingsRequestDto dto);
+
     UserAccount resetUserCredentials(UUID uuid);
 
     void changeUserPassword(UUID uuid, UserPasswordChangeRequestDto dto);

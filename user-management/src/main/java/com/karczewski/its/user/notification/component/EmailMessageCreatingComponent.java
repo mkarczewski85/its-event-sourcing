@@ -22,7 +22,7 @@ public class EmailMessageCreatingComponent {
     }
 
     public EmailMessageModel getPasswordResetEmail(final String token) {
-        final String url = applicationProperties.getBaseUrl() + "/change-password/" + token;
+        final String url = applicationProperties.getBaseUrl() + "/reset-password/" + token;
         EmailTemplate content = EmailTemplate.PASSWORD_RESET_EMAIL;
         return EmailMessageModel.builder()
                 .message(String.format(content.getMessage(), url, url))
