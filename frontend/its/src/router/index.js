@@ -17,6 +17,8 @@ import IssueList from '../components/IssueList.vue';
 import IssueDetails from '../components/IssueDetails.vue';
 import PageNotFound from "../components/PageNotFound.vue";
 import AdministrationPanel from "@/components/AdministrationPanel.vue";
+import axios from "axios";
+import app from "@/App.vue";
 
 const routes = [
   {path: '/', name: 'Login', component: Login},

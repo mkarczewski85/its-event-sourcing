@@ -31,6 +31,8 @@ import { createApp } from 'vue'
 const app = createApp(App)
 
 app.config.globalProperties.$axios = axios
+app.provide('$axios', axios);
+app.provide('$router', router);
 
 registerPlugins(app)
 
