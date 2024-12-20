@@ -39,9 +39,6 @@ public class UserAccount {
     @OneToOne(mappedBy = "userAccount", cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
     private UserCredentials userCredentials;
 
-    @OneToOne(mappedBy = "userAccount", cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
-    private UserAccountSettings userAccountSettings;
-
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;

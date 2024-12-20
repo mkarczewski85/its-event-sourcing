@@ -10,5 +10,6 @@ dependencies {
     implementation project(':user-management')
 
     implementation libs.spring.boot.starter
+    implementation libs.spring.boot.rabbit
     implementation libs.bundles.jackson
 }

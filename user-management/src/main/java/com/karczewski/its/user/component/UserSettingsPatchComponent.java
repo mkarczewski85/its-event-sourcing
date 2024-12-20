@@ -23,7 +23,7 @@ public class UserSettingsPatchComponent {
     public void patchUserSettings(UUID userId, PatchUserSettingsRequestDto dto) {
         UserAccount userAccount = userAccountRepository.findById(userId)
                 .orElseThrow(() -> new UserAccountNotFoundException("Unable to find user account with id: " + userId));
-        UserAccountSettings settings = userAccount.getUserAccountSettings();
+        UserAccountSettings settings = userAccountSettingsRepository.findByUserAccount(userAccount);
         if (dto.getIssueNotifications() != null) {
             settings.setEnableIssueNotifications(dto.getIssueNotifications());
         }
