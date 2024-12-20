@@ -67,7 +67,7 @@
 import { useField, useForm } from 'vee-validate';
 import * as yup from 'yup';
 import Dictionary from '@/components/utils/dictionary.js';
-import {inject} from "vue";
+import {inject, ref} from "vue";
 
 export default {
   computed: {
@@ -77,7 +77,6 @@ export default {
   },
   data() {
     return {
-      attachments: [],
       dialog: false,
       dialogFunc: null,
     };
@@ -89,6 +88,8 @@ export default {
       severity: yup.string().required('Priorytet jest wymagany'),
       type: yup.string().required('Rodzaj jest wymagany'),
     });
+
+    const attachments = ref(null);
 
     const { handleSubmit, errors, values } = useForm({
       validationSchema,
@@ -106,7 +107,22 @@ export default {
 
     const submitForm = async (values) => {
       try {
-        const response = await axios.post('/api/secured/issues', values);
+        // Create FormData to include both the form fields and the attachment
+        const formData = new FormData();
+        formData.append('json', new Blob([JSON.stringify(values)], { type: 'application/json' })); // Add the form's JSON data
+
+        // Attach the single file if it exists
+        if (attachments.value) {
+          formData.append('attachment', attachments.value); // Use a consistent key for the single file
+        }
+
+        // Send the FormData payload
+        const response = await axios.post('/api/secured/issues', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
         const id = response.data.uuid;
         router.push(`/issues/${id}`);
       } catch (error) {
@@ -117,6 +133,7 @@ export default {
     return {
       fields,
       errors,
+      attachments,
       handleSubmit: handleSubmit(submitForm),
     };
   },

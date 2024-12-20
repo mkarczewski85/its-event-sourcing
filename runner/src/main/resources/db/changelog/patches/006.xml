@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.15.xsd">
+
+    <changeSet id="create-uploadedfile-table" author="mkarczewski">
+        <createTable tableName="attachments">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" unique="true" />
+            </column>
+            <column name="uuid" type="UUID">
+                <constraints nullable="false" />
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="content_type" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="data" type="BYTEA">
+                <constraints nullable="false" />
+            </column>
+            <column name="issue_id" type="UUID">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseColumnNames="issue_id"
+                baseTableName="attachments"
+                constraintName="fk_attachments_issue_id"
+                referencedColumnNames="id"
+                referencedTableName="issue_projections"
+                validate="true"/>
+        <createIndex tableName="attachments" indexName="idx_attachments_uuid">
+            <column name="uuid" />
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

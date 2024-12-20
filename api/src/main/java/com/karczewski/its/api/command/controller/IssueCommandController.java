@@ -3,16 +3,20 @@ package com.karczewski.its.api.command.controller;
 import com.karczewski.its.api.command.dto.request.*;
 import com.karczewski.its.api.command.dto.response.IssueCommandResponseDto;
 import com.karczewski.its.api.command.mapper.CommandMappingComponent;
+import com.karczewski.its.attachments.AttachmentsClient;
 import com.karczewski.its.es.core.domain.aggregate.Aggregate;
 import com.karczewski.its.es.core.domain.command.Command;
 import com.karczewski.its.es.core.service.CommandProcessor;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -25,12 +29,18 @@ public class IssueCommandController {
 
     private final CommandProcessor commandProcessor;
     private final CommandMappingComponent commandMappingComponent;
+    private final AttachmentsClient attachmentsClient;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ROLE_REPORTER')")
-    public IssueCommandResponseDto reportIssue(@RequestBody @Valid @NotNull final ReportIssueRequestDto request) {
+    public IssueCommandResponseDto reportIssue(
+            @RequestPart(value = "json") @Valid @NotNull ReportIssueRequestDto request,
+            @RequestPart(value = "attachment", required = false) MultipartFile attachment) throws IOException {
         Command command = commandMappingComponent.toCommand(request);
         Aggregate aggregate = commandProcessor.process(command);
+        if (attachment != null) {
+            attachmentsClient.saveAttachments(commandMappingComponent.toDto(attachment, aggregate.getAggregateId()));
+        }
         return new IssueCommandResponseDto(aggregate.getAggregateId());
     }
 
