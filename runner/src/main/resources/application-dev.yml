@@ -1,3 +1,10 @@
+application:
+  base-url: http://localhost:3000
+
+email:
+  messages:
+    enabled: false
+
 ### Data source config (test)
 spring:
   sql:
@@ -15,14 +22,30 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: validate
-    show-sql: true
-  ### Email sender config (test)
-#  mail:
-#    host: <email_server>
-#    username: <email_account_username>
-#    password: <email_account_password>
-#    port: 587
-#    protocol: smtp
+    show-sql: false
+  ### Email sender config (dev)
+  mail:
+    host: <host>
+    username: <username>
+    password: <pass>
+    port: 465
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: true
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+            fallback: false
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user
+    password: pass
+    virtual-host: vhost
 
 
 ### JWT config
@@ -47,11 +70,11 @@ issues:
     polling-interval: PT2M
     polling-initial-delay: PT2M
 
-logging:
-  level:
-    org.hibernate.SQL: DEBUG
-    org:
-      hibernate:
-        orm:
-          jdbc:
-            bind: TRACE
+#logging:
+#  level:
+#    org.hibernate.SQL: DEBUG
+#    org:
+#      hibernate:
+#        orm:
+#          jdbc:
+#            bind: TRACE
