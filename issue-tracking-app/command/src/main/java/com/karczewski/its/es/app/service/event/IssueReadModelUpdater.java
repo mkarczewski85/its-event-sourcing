@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Collection;
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +27,7 @@ public class IssueReadModelUpdater implements SyncEventHandler {
     private final IssueProjectionUpdateClient issueProjectionClient;
 
     @Override
-    public void handleEvents(List<EventWithId<Event>> events, Aggregate aggregate) {
+    public void handleEvents(Collection<EventWithId<Event>> events, Aggregate aggregate) {
         log.debug("Updating read model for an issue {}", aggregate);
         IssueProjectionUpdateModel issueProjectionUpdateModel =
                 mapToModel(CastingUtility.safeCast(aggregate, IssueAggregate.class));

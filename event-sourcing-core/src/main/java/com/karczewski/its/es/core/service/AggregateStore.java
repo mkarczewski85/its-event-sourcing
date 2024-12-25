@@ -14,10 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Transactional
 @Component
@@ -30,97 +27,101 @@ public class AggregateStore {
     private final AggregateFactory aggregateFactory;
     private final EventSourcingProperties properties;
 
-    public List<EventWithId<Event>> saveAggregate(Aggregate aggregate) {
+    public Collection<EventWithId<Event>> saveAggregate(Aggregate aggregate) {
         log.debug("Saving aggregate {}", aggregate);
+        initializeAggregateIfAbsent(aggregate);
+        handleVersionUpdate(aggregate);
+        return appendAggregateEvents(aggregate);
+    }
 
-        String aggregateType = aggregate.getAggregateType();
-        UUID aggregateId = aggregate.getAggregateId();
-        aggregateRepository.createAggregateIfAbsent(aggregateType, aggregateId);
+    private void initializeAggregateIfAbsent(Aggregate aggregate) {
+        aggregateRepository.createAggregateIfAbsent(aggregate.getAggregateType(), aggregate.getAggregateId());
+    }
 
-        int expectedVersion = aggregate.getBaseVersion();
-        int newVersion = aggregate.getVersion();
-        if (!aggregateRepository.updateAggregateVersion(aggregateId, expectedVersion, newVersion)) {
-            log.warn("Optimistic concurrency control error in aggregate {} {}: " +
-                            "actual version doesn't match expected version {}",
-                    aggregateType, aggregateId, expectedVersion);
-            throw new OptimisticConcurrencyControlException(expectedVersion);
+    private void handleVersionUpdate(Aggregate aggregate) {
+        if (!aggregateRepository.updateAggregateVersion(aggregate.getAggregateId(), aggregate.getBaseVersion(), aggregate.getVersion())) {
+            log.warn("Optimistic concurrency control error in aggregate {} {}: actual version doesn't match expected version {}",
+                    aggregate.getAggregateType(), aggregate.getAggregateId(), aggregate.getBaseVersion());
+            throw new OptimisticConcurrencyControlException(aggregate.getBaseVersion());
         }
+    }
 
-        EventSourcingProperties.SnapshottingProperties snapshotting = properties.getSnapshottingProperties(aggregateType);
+    private List<EventWithId<Event>> appendAggregateEvents(Aggregate aggregate) {
         List<Event> changes = aggregate.getChanges();
         List<EventWithId<Event>> newEvents = new ArrayList<>();
+        EventSourcingProperties.SnapshottingProperties snapshotting = properties.getSnapshottingProperties(aggregate.getAggregateType());
         for (Event event : changes) {
-            log.info("Appending {} event: {}", aggregateType, event);
+            log.info("Appending {} event: {}", aggregate.getAggregateType(), event);
             EventWithId<Event> newEvent = eventRepository.appendEvent(event);
             newEvents.add(newEvent);
-            createAggregateSnapshot(snapshotting, aggregate);
+            maybeCreateSnapshot(snapshotting, aggregate);
         }
         return newEvents;
     }
 
-    private void createAggregateSnapshot(EventSourcingProperties.SnapshottingProperties snapshotting,
-                                         Aggregate aggregate) {
-        if (snapshotting.enabled() &&
-                snapshotting.nthEvent() > 1 &&
-                aggregate.getVersion() % snapshotting.nthEvent() == 0) {
+    private void maybeCreateSnapshot(EventSourcingProperties.SnapshottingProperties snapshotting, Aggregate aggregate) {
+        if (shouldCreateSnapshot(snapshotting, aggregate)) {
             log.info("Creating {} aggregate {} version {} snapshot",
                     aggregate.getAggregateType(), aggregate.getAggregateId(), aggregate.getVersion());
             aggregateRepository.createAggregateSnapshot(aggregate);
         }
     }
 
-    public Aggregate readAggregate(String aggregateType,
-                                   UUID aggregateId) {
+    private boolean shouldCreateSnapshot(EventSourcingProperties.SnapshottingProperties snapshotting, Aggregate aggregate) {
+        return snapshotting.enabled() && snapshotting.nthEvent() > 1 && aggregate.getVersion() % snapshotting.nthEvent() == 0;
+    }
+
+    public Aggregate readAggregate(String aggregateType, UUID aggregateId) {
         return readAggregate(aggregateType, aggregateId, null);
     }
 
-    public Aggregate readAggregate(@NonNull String aggregateType,
-                                   @NonNull UUID aggregateId,
-                                   @Nullable Integer version) {
+    public Aggregate readAggregate(@NonNull String aggregateType, @NonNull UUID aggregateId, @Nullable Integer version) {
         log.debug("Reading {} aggregate {}", aggregateType, aggregateId);
-        EventSourcingProperties.SnapshottingProperties snapshotting = properties.getSnapshottingProperties(aggregateType);
-        Aggregate aggregate;
-        if (snapshotting.enabled()) {
-            aggregate = readAggregateFromSnapshot(aggregateId, version)
-                    .orElseGet(() -> {
-                        log.debug("Aggregate {} snapshot not found", aggregateId);
-                        return readAggregateFromEvents(aggregateType, aggregateId, version);
-                    });
 
-        } else {
-            aggregate = readAggregateFromEvents(aggregateType, aggregateId, version);
-        }
+        EventSourcingProperties.SnapshottingProperties snapshotting = properties.getSnapshottingProperties(aggregateType);
+        Aggregate aggregate = snapshotting.enabled()
+                ? readFromSnapshotOrEvents(aggregateType, aggregateId, version)
+                : readAggregateFromEvents(aggregateType, aggregateId, version);
+
         log.debug("Read aggregate {}", aggregate);
         return aggregate;
     }
 
-    private Optional<Aggregate> readAggregateFromSnapshot(UUID aggregateId,
-                                                          @Nullable Integer aggregateVersion) {
-        return aggregateRepository.findAggregateSnapshot(aggregateId, aggregateVersion)
-                .map(aggregate -> {
-                    int snapshotVersion = aggregate.getVersion();
-                    log.debug("Read aggregate {} snapshot version {}", aggregateId, snapshotVersion);
-                    if (aggregateVersion == null || snapshotVersion < aggregateVersion) {
-                        var events = eventRepository.readEvents(aggregateId, snapshotVersion, aggregateVersion)
-                                .stream()
-                                .map(EventWithId::event)
-                                .toList();
-                        log.debug("Read {} events after version {} for aggregate {}",
-                                events.size(), snapshotVersion, aggregateId);
-                        aggregate.loadFromHistory(events);
-                    }
-                    return aggregate;
+    private Aggregate readFromSnapshotOrEvents(String aggregateType, UUID aggregateId, @Nullable Integer version) {
+        return readAggregateFromSnapshot(aggregateId, version)
+                .orElseGet(() -> {
+                    log.debug("Aggregate {} snapshot not found", aggregateId);
+                    return readAggregateFromEvents(aggregateType, aggregateId, version);
                 });
     }
 
-    private Aggregate readAggregateFromEvents(String aggregateType,
-                                              UUID aggregateId,
-                                              @Nullable Integer aggregateVersion) {
-        var events = eventRepository.readEvents(aggregateId, null, aggregateVersion)
+    private Optional<Aggregate> readAggregateFromSnapshot(UUID aggregateId, @Nullable Integer aggregateVersion) {
+        return aggregateRepository.findAggregateSnapshot(aggregateId, aggregateVersion)
+                .map(snapshot -> {
+                    loadEventsAfterSnapshot(snapshot, aggregateVersion);
+                    return snapshot;
+                });
+    }
+
+    private void loadEventsAfterSnapshot(Aggregate aggregate, @Nullable Integer aggregateVersion) {
+        int snapshotVersion = aggregate.getVersion();
+        if (aggregateVersion == null || snapshotVersion < aggregateVersion) {
+            List<Event> events = eventRepository.readEvents(aggregate.getAggregateId(), snapshotVersion, aggregateVersion)
+                    .stream()
+                    .map(EventWithId::event)
+                    .toList();
+            log.debug("Read {} events after version {} for aggregate {}", events.size(), snapshotVersion, aggregate.getAggregateId());
+            aggregate.loadFromHistory(events);
+        }
+    }
+
+    private Aggregate readAggregateFromEvents(String aggregateType, UUID aggregateId, @Nullable Integer aggregateVersion) {
+        List<Event> events = eventRepository.readEvents(aggregateId, null, aggregateVersion)
                 .stream()
                 .map(EventWithId::event)
                 .toList();
         log.debug("Read {} events for aggregate {}", events.size(), aggregateId);
+
         Aggregate aggregate = aggregateFactory.newInstance(aggregateType, aggregateId);
         aggregate.loadFromHistory(events);
         return aggregate;

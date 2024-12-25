@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
+import java.util.Set;
 
 @Transactional
 @Component
@@ -27,11 +27,11 @@ import java.util.UUID;
 public class CommandProcessor {
 
     private final AggregateStore aggregateStore;
-    private final List<CommandHandler<? extends Command>> commandHandlers;
-    private final List<CommandInterceptor<? extends Command>> commandInterceptors;
+    private final Set<CommandHandler<? extends Command>> commandHandlers;
+    private final Set<CommandInterceptor<? extends Command>> commandInterceptors;
     private final DefaultCommandHandler defaultCommandHandler;
     private final DefaultCommandInterceptor defaultCommandInterceptor;
-    private final List<SyncEventHandler> aggregateChangesHandlers;
+    private final Set<SyncEventHandler> aggregateChangesHandlers;
 
     public void process(@NotEmpty Collection<Command> commands) {
         commands.forEach(this::process);
@@ -39,44 +39,61 @@ public class CommandProcessor {
 
     public Aggregate process(@NonNull Command command) {
         log.debug("Processing command {}", command);
-
-        String aggregateType = command.getAggregateType();
-        UUID aggregateId = command.getAggregateId();
-
-        Aggregate aggregate = aggregateStore.readAggregate(aggregateType, aggregateId);
-
-        commandInterceptors.stream()
-                .filter(commandInterceptor -> commandInterceptor.getCommandType() == command.getClass())
-                .findFirst()
-                .ifPresentOrElse(commandInterceptor -> {
-                    log.debug("Intercepting command {} with {}",
-                            command.getClass().getSimpleName(), commandInterceptor.getClass().getSimpleName());
-                    commandInterceptor.intercept(aggregate, command);
-                }, () -> {
-                    log.debug("No specialized interceptor found, intercepting command {} with {}",
-                            command.getClass().getSimpleName(), defaultCommandInterceptor.getClass().getSimpleName());
-                });
-
-        commandHandlers.stream()
-                .filter(commandHandler -> commandHandler.getCommandType() == command.getClass())
-                .findFirst()
-                .ifPresentOrElse(commandHandler -> {
-                    log.debug("Handling command {} with {}",
-                            command.getClass().getSimpleName(), commandHandler.getClass().getSimpleName());
-                    commandHandler.handle(aggregate, command);
-                }, () -> {
-                    log.debug("No specialized handler found, handling command {} with {}",
-                            command.getClass().getSimpleName(), defaultCommandHandler.getClass().getSimpleName());
-                    defaultCommandHandler.handle(aggregate, command);
-                });
-
-        List<EventWithId<Event>> newEvents = aggregateStore.saveAggregate(aggregate);
-
-        aggregateChangesHandlers.stream()
-                .filter(handler -> handler.getAggregateType().equals(aggregateType))
-                .forEach(handler -> handler.handleEvents(newEvents, aggregate));
-
+        Aggregate aggregate = loadAggregate(command);
+        interceptCommand(command, aggregate);
+        handleCommand(command, aggregate);
+        Collection<EventWithId<Event>> newEvents = saveAggregate(aggregate);
+        notifyEventHandlers(command, aggregate, newEvents);
         return aggregate;
     }
-}
 
+    private Aggregate loadAggregate(Command command) {
+        return aggregateStore.readAggregate(command.getAggregateType(), command.getAggregateId());
+    }
+
+    private void interceptCommand(Command command, Aggregate aggregate) {
+        findInterceptorForCommand(command)
+                .ifPresent(
+                        interceptor -> {
+                            log.debug("Intercepting command {} with {}",
+                                    command.getClass().getSimpleName(),
+                                    interceptor.getClass().getSimpleName());
+                            interceptor.intercept(aggregate, command);
+                        });
+    }
+
+    private void handleCommand(Command command, Aggregate aggregate) {
+        findHandlerForCommand(command)
+                .ifPresent(
+                        handler -> {
+                            log.debug("Handling command {} with {}",
+                                    command.getClass().getSimpleName(),
+                                    handler.getClass().getSimpleName());
+                            handler.handle(aggregate, command);
+                        });
+    }
+
+    private Collection<EventWithId<Event>> saveAggregate(Aggregate aggregate) {
+        return aggregateStore.saveAggregate(aggregate);
+    }
+
+    private void notifyEventHandlers(Command command, Aggregate aggregate, Collection<EventWithId<Event>> newEvents) {
+        aggregateChangesHandlers.stream()
+                .filter(handler -> handler.getAggregateType().equals(command.getAggregateType()))
+                .forEach(handler -> handler.handleEvents(newEvents, aggregate));
+    }
+
+    private Optional<CommandInterceptor<? extends Command>> findInterceptorForCommand(Command command) {
+        return commandInterceptors.stream()
+                .filter(interceptor -> interceptor.getCommandType() == command.getClass())
+                .findFirst()
+                .or(() -> Optional.of(defaultCommandInterceptor));
+    }
+
+    private Optional<CommandHandler<? extends Command>> findHandlerForCommand(Command command) {
+        return commandHandlers.stream()
+                .filter(handler -> handler.getCommandType() == command.getClass())
+                .findFirst()
+                .or(() -> Optional.of(defaultCommandHandler));
+    }
+}
