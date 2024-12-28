@@ -26,7 +26,9 @@
         counter="2500"
       ></v-textarea>
 
-      <v-file-input label="Załączniki" v-model="attachments" multiple show-size></v-file-input>
+      <v-file-input label="Załączniki" show-size=1024
+                    :error-messages="errors.attachments"
+                    v-model="fields.attachments.value.value" multiple></v-file-input>
 
       <v-sheet class="d-flex flex-wrap justify-space-evenly">
         <v-select
@@ -77,7 +79,7 @@ export default {
   },
   data() {
     return {
-      attachments: [],
+      // attachments: [],
       dialog: false,
       dialogFunc: null,
     };
@@ -88,6 +90,16 @@ export default {
       description: yup.string().required('Opis jest wymagany').max(2500, 'Opis nie może przekraczać 2500 znaków'),
       severity: yup.string().required('Priorytet jest wymagany'),
       type: yup.string().required('Rodzaj jest wymagany'),
+      attachments: yup
+        .array()
+        .of(
+          yup.mixed().test(
+            'fileSize',
+            'Plik nie może przekraczać 2 MB.',
+            (file) => !file || file.size <= 2 * 1024 * 1024 // 2 MB
+          )
+        )
+        .nullable(), // Allows null or undefined attachments
     });
 
     const { handleSubmit, errors, values } = useForm({
@@ -99,6 +111,7 @@ export default {
       description: useField('description'),
       severity: useField('severity'),
       type: useField('type'),
+      attachments: useField('attachments')
     };
 
     const axios = inject('$axios');

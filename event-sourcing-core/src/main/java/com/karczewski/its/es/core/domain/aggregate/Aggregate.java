@@ -85,8 +85,7 @@ public abstract class Aggregate {
         } catch (NoSuchMethodException | IllegalAccessException e) {
             throw new UnsupportedOperationException(
                     "Aggregate %s doesn't support %s(%s)".formatted(
-                            this.getClass(), methodName, o.getClass().getSimpleName()),
-                    e);
+                            this.getClass(), methodName, o.getClass().getSimpleName()), e);
         }
     }
 }

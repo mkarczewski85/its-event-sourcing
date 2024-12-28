@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import Formatter, { formatDate } from "@/components/utils/formatter.js";
+import Formatter from "@/components/utils/formatter.js";
 export default {
   components: {
     Formatter
@@ -86,7 +86,6 @@ export default {
     };
   },
   methods: {
-    formatDate,
     async fetchComments() {
       const offset = (this.currentPage - 1) * 5;
       try {

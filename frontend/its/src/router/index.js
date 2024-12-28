@@ -30,7 +30,7 @@ const routes = [
   {path: '/issues', name: 'IssueList', component: IssueList},
   {path: '/issues/:id', name: 'IssueDetails', component: IssueDetails},
   {path: '/page-not-found', name: 'PageNotFound', component: IssueDetails},
-  {path: '/:pathMatch(.*)*', name: 'NotFound', component: PageNotFound }
+  {path: '/:pathMatch(.*)*', name: 'NotFound', component: PageNotFound}
 ]
 
 const router = createRouter({

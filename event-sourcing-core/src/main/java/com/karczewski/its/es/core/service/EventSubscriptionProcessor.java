@@ -1,6 +1,7 @@
 package com.karczewski.its.es.core.service;
 
 import com.karczewski.its.es.core.domain.event.Event;
+import com.karczewski.its.es.core.domain.event.EventSubscriptionCheckpoint;
 import com.karczewski.its.es.core.domain.event.EventWithId;
 import com.karczewski.its.es.core.repository.EventRepository;
 import com.karczewski.its.es.core.repository.EventSubscriptionRepository;
@@ -26,25 +27,48 @@ public class EventSubscriptionProcessor {
     @Async
     public void processNewEvents(AsyncEventHandler eventHandler) {
         String subscriptionName = eventHandler.getSubscriptionName();
-        log.debug("Handling new events for subscription {}", subscriptionName);
-
-        subscriptionRepository.createSubscriptionIfAbsent(subscriptionName);
+        log.debug("Processing new events for subscription: {}", subscriptionName);
+        ensureSubscriptionExists(subscriptionName);
         subscriptionRepository.findCheckpointAndLockSubscription(subscriptionName).ifPresentOrElse(
-                checkpoint -> {
-                    log.debug("Acquired lock on subscription {}, checkpoint = {}", subscriptionName, checkpoint);
-                    List<EventWithId<Event>> events = eventRepository.readEventsAfterCheckpoint(
-                            eventHandler.getAggregateType(),
-                            checkpoint.lastProcessedTransactionId(),
-                            checkpoint.lastProcessedEventId()
-                    );
-                    log.debug("Fetched {} new event(s) for subscription {}", events.size(), subscriptionName);
-                    if (!events.isEmpty()) {
-                        events.forEach(eventHandler::handleEvent);
-                        EventWithId<Event> lastEvent = events.get(events.size() - 1);
-                        subscriptionRepository.updateEventSubscription(
-                                subscriptionName, lastEvent.transactionId(), lastEvent.id());
-                    }
-                },
-                () -> log.debug("Can't acquire lock on subscription {}", subscriptionName));
+                checkpoint -> processEventsForSubscription(eventHandler, subscriptionName, checkpoint),
+                () -> log.debug("Could not acquire lock for subscription: {}", subscriptionName)
+        );
+    }
+
+    private void ensureSubscriptionExists(String subscriptionName) {
+        subscriptionRepository.createSubscriptionIfAbsent(subscriptionName);
+        log.debug("Ensured subscription exists: {}", subscriptionName);
+    }
+
+    private void processEventsForSubscription(AsyncEventHandler eventHandler, String subscriptionName,
+                                              EventSubscriptionCheckpoint checkpoint) {
+        log.debug("Acquired lock for subscription: {}, checkpoint: {}", subscriptionName, checkpoint);
+        List<EventWithId<Event>> events = fetchEventsAfterCheckpoint(eventHandler, checkpoint);
+        if (events.isEmpty()) {
+            log.debug("No new events found for subscription: {}", subscriptionName);
+            return;
+        }
+        log.debug("Fetched {} new event(s) for subscription: {}", events.size(), subscriptionName);
+        events.forEach(eventHandler::handleEvent);
+        updateSubscriptionCheckpoint(subscriptionName, events);
+    }
+
+    private List<EventWithId<Event>> fetchEventsAfterCheckpoint(AsyncEventHandler eventHandler,
+                                                                EventSubscriptionCheckpoint checkpoint) {
+        return eventRepository.readEventsAfterCheckpoint(
+                eventHandler.getAggregateType(),
+                checkpoint.lastProcessedTransactionId(),
+                checkpoint.lastProcessedEventId()
+        );
+    }
+
+    private void updateSubscriptionCheckpoint(String subscriptionName, List<EventWithId<Event>> events) {
+        EventWithId<Event> lastEvent = events.get(events.size() - 1);
+        subscriptionRepository.updateEventSubscription(
+                subscriptionName,
+                lastEvent.transactionId(),
+                lastEvent.id()
+        );
+        log.debug("Updated subscription: {} with last processed event ID: {}", subscriptionName, lastEvent.id());
     }
 }
