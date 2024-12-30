@@ -37,9 +37,9 @@
             class="mb-4">
           <v-card variant="tonal">
             <v-card-subtitle>
-              {{ comment.authoredBy }}
+              {{ comment?.authoredBy }}
               <span class="grey--text text--darken-1 ml-2">
-                ({{ formatDate(comment.publishedAt) }})
+                ({{ formatDate(comment?.publishedAt) }})
               </span>
             </v-card-subtitle>
             <v-card-text>
@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import Formatter from "@/components/utils/formatter.js";
+import Formatter, {formatDate} from "@/components/utils/formatter.js";
 export default {
   components: {
     Formatter
@@ -86,6 +86,7 @@ export default {
     };
   },
   methods: {
+    formatDate,
     async fetchComments() {
       const offset = (this.currentPage - 1) * 5;
       try {
