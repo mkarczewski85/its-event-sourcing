@@ -12,6 +12,8 @@ dependencies {
 
     implementation libs.spring.boot.starter
     implementation libs.spring.boot.data
+    implementation libs.spring.boot.actuator
+    implementation libs.micrometer
     implementation libs.liquibase.core
     implementation libs.postgresql
     implementation libs.spring.rest.docs

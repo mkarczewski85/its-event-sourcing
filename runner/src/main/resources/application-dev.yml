@@ -47,6 +47,24 @@ spring:
     password: pass
     virtual-host: vhost
 
+management:
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    prometheus:
+      access: unrestricted
+    health:
+      show-details: always
+    metrics:
+      access: read_only
+
+
 
 ### JWT config
 jwt:

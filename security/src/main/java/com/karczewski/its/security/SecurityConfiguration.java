@@ -34,7 +34,7 @@ public class SecurityConfiguration {
         http
                 .addFilterBefore((Filter) authenticationJwtTokenFilter(), (Class<? extends Filter>) UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers(restPrefix + restPublicPath + "/**", "/v3/api-docs/**", "/v3/api-docs.yaml", "/swagger-ui/**", "/swagger-ui.html")
+                        .requestMatchers(restPrefix + restPublicPath + "/**", "/actuator/prometheus", "/v3/api-docs/**", "/v3/api-docs.yaml", "/swagger-ui/**", "/swagger-ui.html")
                         .permitAll()
                         .anyRequest()
                         .authenticated())

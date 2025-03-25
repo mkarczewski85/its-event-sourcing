@@ -8,6 +8,7 @@ postgresql = "42.7.2"
 spring-docs = "2.7.0"
 junit-version = "5.10.1"
 jackson-version = "2.18.1"
+micrometer-version = "1.14.2"
 
 [libraries]
 # spring
@@ -19,6 +20,7 @@ spring-boot-data = { module = "org.springframework.boot:spring-boot-starter-data
 spring-boot-security = { module = "org.springframework.boot:spring-boot-starter-security", version.ref = "spring-boot" }
 spring-boot-mail = { module = "org.springframework.boot:spring-boot-starter-mail", version.ref = "spring-boot" }
 spring-boot-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "spring-boot" }
+spring-boot-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "spring-boot" }
 spring-rest-docs = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "spring-docs" }
 spring-boot-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
 
@@ -29,6 +31,7 @@ junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref 
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 liquibase-core = { module = "org.liquibase:liquibase-core", version.ref = "liquibase" }
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+micrometer = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "micrometer-version" }
 jwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jwt" }
 jwt-impl = { module = "io.jsonwebtoken:jjwt-impl ", version.ref = "jwt" }
 jwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jwt" }
