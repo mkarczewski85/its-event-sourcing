@@ -7,6 +7,7 @@ dependencies {
 
     implementation project(':user-management')
     implementation project(':security')
+    implementation project(':attachments')
     implementation project(':issue-tracking-app:command')
     implementation project(':issue-tracking-app:query')
 

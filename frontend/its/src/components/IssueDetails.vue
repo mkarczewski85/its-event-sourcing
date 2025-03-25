@@ -153,7 +153,7 @@
         <v-row>
           <v-col cols="12">
             <strong>Załączniki:</strong>
-            <v-list v-if="issue?.attachments" dense>
+            <v-list v-if="issue?.attachments.length > 0" dense>
               <v-list-item
                   v-for="(attachment, index) in issue?.attachments"
                   :key="index"

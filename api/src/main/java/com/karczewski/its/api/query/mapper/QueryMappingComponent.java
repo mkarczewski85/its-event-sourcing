@@ -1,9 +1,7 @@
 package com.karczewski.its.api.query.mapper;
 
-import com.karczewski.its.api.query.dto.IssueCommentDto;
-import com.karczewski.its.api.query.dto.IssueProjectionDto;
-import com.karczewski.its.api.query.dto.IssueProjectionItemDto;
-import com.karczewski.its.api.query.dto.UserDto;
+import com.karczewski.its.api.query.dto.*;
+import com.karczewski.its.query.entity.IssueAttachment;
 import com.karczewski.its.query.entity.IssueComment;
 import com.karczewski.its.query.entity.IssueProjection;
 import com.karczewski.its.query.entity.User;
@@ -12,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -29,6 +28,7 @@ public class QueryMappingComponent {
                 .assignedTo(toDto(issueProjection.getAssignedTo()))
                 .reportedAt(issueProjection.getReportedAt())
                 .updatedAt(issueProjection.getUpdatedAt())
+                .attachments(issueProjection.getAttachments().stream().map(this::toDto).collect(Collectors.toList()))
                 .build();
     }
 
@@ -74,6 +74,14 @@ public class QueryMappingComponent {
                 .email(user.getEmail())
                 .department(user.getDepartment().getName())
                 .location(user.getDepartment().getLocation())
+                .build();
+    }
+
+    private AttachmentDto toDto(IssueAttachment issueAttachment) {
+        return AttachmentDto.builder()
+                .uuid(issueAttachment.getUuid())
+                .name(issueAttachment.getName())
+                .contentType(issueAttachment.getContentType())
                 .build();
     }
 

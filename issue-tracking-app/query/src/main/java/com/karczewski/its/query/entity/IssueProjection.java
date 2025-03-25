@@ -55,6 +55,10 @@ public class IssueProjection {
     @Builder.Default
     private Collection<IssueComment> comments = new ArrayList<>(0);
 
+    @OneToMany(mappedBy = "issue", fetch = FetchType.EAGER)
+    @Builder.Default
+    private Collection<IssueAttachment> attachments = new ArrayList<>(0);
+
     private IssueProjection(UUID id) {
         this.id = id;
     }

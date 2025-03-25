@@ -1,12 +1,15 @@
 package com.karczewski.its.api.command.mapper;
 
 import com.karczewski.its.api.command.dto.request.*;
+import com.karczewski.its.attachments.dto.AttachmentsUploadDto;
 import com.karczewski.its.es.app.domain.command.*;
 import com.karczewski.its.es.core.domain.command.Command;
 import com.karczewski.its.security.authentication.AuthenticationClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -63,6 +66,15 @@ public class CommandMappingComponent {
         addCommandIfNotNull(commands, request.getType(),
                 type -> new UpdateIssueTypeCommand(request.getUuid(), type, authenticationClient.getLoggedUserUuid()));
         return commands;
+    }
+
+    public AttachmentsUploadDto toDto(MultipartFile file, UUID issueId) throws IOException {
+        return AttachmentsUploadDto.builder()
+                .issueId(issueId)
+                .filename(file.getOriginalFilename())
+                .contentType(file.getContentType())
+                .data(file.getBytes())
+                .build();
     }
 
     private <T> void addCommandIfNotNull(List<Command> commands,

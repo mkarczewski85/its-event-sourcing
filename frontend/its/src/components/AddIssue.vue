@@ -26,9 +26,7 @@
         counter="2500"
       ></v-textarea>
 
-      <v-file-input label="Załączniki" show-size=1024
-                    :error-messages="errors.attachments"
-                    v-model="fields.attachments.value.value" multiple></v-file-input>
+      <v-file-input label="Załączniki" v-model="attachments" multiple show-size></v-file-input>
 
       <v-sheet class="d-flex flex-wrap justify-space-evenly">
         <v-select
@@ -69,7 +67,7 @@
 import { useField, useForm } from 'vee-validate';
 import * as yup from 'yup';
 import Dictionary from '@/components/utils/dictionary.js';
-import {inject} from "vue";
+import {inject, ref} from "vue";
 
 export default {
   computed: {
@@ -79,7 +77,6 @@ export default {
   },
   data() {
     return {
-      // attachments: [],
       dialog: false,
       dialogFunc: null,
     };
@@ -90,17 +87,9 @@ export default {
       description: yup.string().required('Opis jest wymagany').max(2500, 'Opis nie może przekraczać 2500 znaków'),
       severity: yup.string().required('Priorytet jest wymagany'),
       type: yup.string().required('Rodzaj jest wymagany'),
-      attachments: yup
-        .array()
-        .of(
-          yup.mixed().test(
-            'fileSize',
-            'Plik nie może przekraczać 2 MB.',
-            (file) => !file || file.size <= 2 * 1024 * 1024 // 2 MB
-          )
-        )
-        .nullable(), // Allows null or undefined attachments
     });
+
+    const attachments = ref(null);
 
     const { handleSubmit, errors, values } = useForm({
       validationSchema,
@@ -111,7 +100,6 @@ export default {
       description: useField('description'),
       severity: useField('severity'),
       type: useField('type'),
-      attachments: useField('attachments')
     };
 
     const axios = inject('$axios');
@@ -119,7 +107,22 @@ export default {
 
     const submitForm = async (values) => {
       try {
-        const response = await axios.post('/api/secured/issues', values);
+        // Create FormData to include both the form fields and the attachment
+        const formData = new FormData();
+        formData.append('json', new Blob([JSON.stringify(values)], { type: 'application/json' })); // Add the form's JSON data
+
+        // Attach the single file if it exists
+        if (attachments.value) {
+          formData.append('attachment', attachments.value); // Use a consistent key for the single file
+        }
+
+        // Send the FormData payload
+        const response = await axios.post('/api/secured/issues', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
         const id = response.data.uuid;
         router.push(`/issues/${id}`);
       } catch (error) {
@@ -130,6 +133,7 @@ export default {
     return {
       fields,
       errors,
+      attachments,
       handleSubmit: handleSubmit(submitForm),
     };
   },
