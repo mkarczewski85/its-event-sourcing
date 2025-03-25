@@ -1,0 +1,20 @@
+groups:
+  - name: app-rules
+    rules:
+      - alert: ServerDown
+        expr: up < 1
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Serwer {{ $labels.instance }} niedostępny"
+          description: "Instancja {{ $labels.instance }} o ID: {{ $labels.job }} jest niedostępna przez ponad 1 minutę."
+
+      - alert: HighCpuUsage
+        expr: sum(rate(process_cpu_usage{job="spring-boot-prometheus"}[5m])) > 0.8
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Zbyt duże zużycie procesora
+          description: Zużycie procesora przekroczyło 80% przez ostatnie 5 minut.

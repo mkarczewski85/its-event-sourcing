@@ -1,0 +1,11 @@
+route:
+  receiver: app-alert-manager
+  repeat_interval: 1m
+receivers:
+  - name: 'app-alert-manager'
+    email_configs:
+      - to: 'm.karczewski1985@gmail.com'
+        from: 'm.karczewski1985@gmail.com'
+        smarthost: 'smtp.gmail.com:587'
+        auth_username: 'username'
+        auth_password: 'password'
