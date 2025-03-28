@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import java.util.HashMap;
 import java.util.Map;
 
+@Setter
 @Validated
 @Configuration
 @ConfigurationProperties(prefix = "event-sourcing")
@@ -20,7 +21,6 @@ public class EventSourcingProperties {
 
     @Valid
     @NestedConfigurationProperty
-    @Setter
     private Map<String, SnapshottingProperties> snapshotting = new HashMap<>();
 
     public SnapshottingProperties getSnapshottingProperties(String aggregateType) {

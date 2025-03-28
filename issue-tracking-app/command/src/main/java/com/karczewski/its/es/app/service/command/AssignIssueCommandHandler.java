@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class AssignIssueCommandHandler implements CommandHandler<AssignIssueCommand> {
     @Override
     public void handle(Aggregate aggregate, Command command) {
-        aggregate.process(command);
+        aggregate.processCommand(command);
     }
 
     @Nonnull

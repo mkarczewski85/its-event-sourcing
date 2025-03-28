@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class CancelIssueCommandHandler implements CommandHandler<CancelIssueCommand> {
     @Override
     public void handle(Aggregate aggregate, Command command) {
-        aggregate.process(command);
+        aggregate.processCommand(command);
     }
 
     @Nonnull

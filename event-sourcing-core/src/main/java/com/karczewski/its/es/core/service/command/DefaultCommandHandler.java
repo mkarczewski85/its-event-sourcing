@@ -12,8 +12,8 @@ public class DefaultCommandHandler implements CommandHandler<Command> {
 
     @Override
     public void handle(Aggregate aggregate, Command command) {
-        log.warn("No command handler found");
-        aggregate.process(command);
+        log.warn("No specific command handler found");
+        aggregate.processCommand(command);
     }
 
     @Nonnull

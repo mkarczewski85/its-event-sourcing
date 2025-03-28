@@ -3,14 +3,14 @@ package com.karczewski.its.es.core.domain.aggregate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.karczewski.its.es.core.domain.command.Command;
 import com.karczewski.its.es.core.domain.event.Event;
+import com.karczewski.its.es.core.exception.HandlerInvocationException;
+import com.karczewski.its.es.core.exception.UnsupportedHandlerException;
 import jakarta.annotation.Nonnull;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.SneakyThrows;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,18 +38,27 @@ public abstract class Aggregate {
     public abstract String getAggregateType();
 
     public void loadFromHistory(List<Event> events) {
+        assertEmptyChanges();
+
+        for (Event event : events) {
+            validateEventVersion(event);
+            applyEvent(event);
+            baseVersion = version = event.getVersion();
+        }
+    }
+
+    private void assertEmptyChanges() {
         if (!changes.isEmpty()) {
             throw new IllegalStateException("Aggregate has non-empty changes");
         }
-        events.forEach(event -> {
-            if (event.getVersion() <= version) {
-                throw new IllegalStateException(
-                        "Event version %s <= aggregate base version %s".formatted(
-                                event.getVersion(), getNextVersion()));
-            }
-            apply(event);
-            baseVersion = version = event.getVersion();
-        });
+    }
+
+    private void validateEventVersion(Event event) {
+        int expectedVersion = version + 1;
+        if (event.getVersion() != expectedVersion) {
+            throw new IllegalStateException(
+                    "Event version %s doesn't match expected version %s".formatted(event.getVersion(), expectedVersion));
+        }
     }
 
     protected int getNextVersion() {
@@ -57,35 +66,32 @@ public abstract class Aggregate {
     }
 
     protected void applyChange(Event event) {
-        if (event.getVersion() != getNextVersion()) {
-            throw new IllegalStateException(
-                    "Event version %s doesn't match expected version %s".formatted(
-                            event.getVersion(), getNextVersion()));
-        }
-        apply(event);
+        validateEventVersion(event);
+        applyEvent(event);
         changes.add(event);
         version = event.getVersion();
     }
 
-    protected void apply(Event event) {
+    protected void applyEvent(Event event) {
         log.debug("Applying event {}", event);
-        invoke(event, "apply");
+        invokeHandler(event, "apply");
     }
 
-    public void process(Command command) {
+    public void processCommand(Command command) {
         log.debug("Processing command {}", command);
-        invoke(command, "process");
+        invokeHandler(command, "process");
     }
 
-    @SneakyThrows(InvocationTargetException.class)
-    private void invoke(Object o, String methodName) {
+    private void invokeHandler(Object message, String methodName) {
         try {
-            Method method = this.getClass().getMethod(methodName, o.getClass());
-            method.invoke(this, o);
+            Method method = this.getClass().getMethod(methodName, message.getClass());
+            method.invoke(this, message);
         } catch (NoSuchMethodException | IllegalAccessException e) {
-            throw new UnsupportedOperationException(
-                    "Aggregate %s doesn't support %s(%s)".formatted(
-                            this.getClass(), methodName, o.getClass().getSimpleName()), e);
+            throw new UnsupportedHandlerException(
+                    this.getClass().getSimpleName(), methodName, message.getClass().getSimpleName());
+        } catch (ReflectiveOperationException e) {
+            throw new HandlerInvocationException(
+                    this.getClass().getSimpleName(), methodName, message.getClass().getSimpleName(), e);
         }
     }
 }
