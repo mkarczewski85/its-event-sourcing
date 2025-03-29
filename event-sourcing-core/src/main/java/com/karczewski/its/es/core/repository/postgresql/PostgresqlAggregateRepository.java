@@ -35,8 +35,8 @@ public class PostgresqlAggregateRepository implements AggregateRepository {
         jdbcTemplate.update(
                 SqlQueries.INSERT_AGGREGATE_QUERY,
                 Map.of(
-                        "aggregateId", aggregateId,
-                        "aggregateType", aggregateType
+                        SqlParameters.AGGREGATE_ID_PARAM, aggregateId,
+                        SqlParameters.AGGREGATE_TYPE_PARAM, aggregateType
                 )
         );
     }
@@ -47,9 +47,9 @@ public class PostgresqlAggregateRepository implements AggregateRepository {
         int updatedRows = jdbcTemplate.update(
                 SqlQueries.UPDATE_AGGREGATE_QUERY,
                 Map.of(
-                        "newVersion", newVersion,
-                        "aggregateId", aggregateId,
-                        "expectedVersion", expectedVersion
+                        SqlParameters.NEW_VERSION_PARAM, newVersion,
+                        SqlParameters.AGGREGATE_ID_PARAM, aggregateId,
+                        SqlParameters.EXPECTED_VERSION_PARAM, expectedVersion
                 )
         );
         return updatedRows > 0;
@@ -60,9 +60,9 @@ public class PostgresqlAggregateRepository implements AggregateRepository {
         jdbcTemplate.update(
                 SqlQueries.INSERT_AGGREGATE_SNAPSHOT_QUERY,
                 Map.of(
-                        "aggregateId", aggregate.getAggregateId(),
-                        "version", aggregate.getVersion(),
-                        "jsonObj", objectMapper.writeValueAsString(aggregate)
+                        SqlParameters.AGGREGATE_ID_PARAM, aggregate.getAggregateId(),
+                        SqlParameters.VERSION_PARAM, aggregate.getVersion(),
+                        SqlParameters.JSON_OBJ_PARAM, objectMapper.writeValueAsString(aggregate)
                 )
         );
     }
@@ -70,8 +70,8 @@ public class PostgresqlAggregateRepository implements AggregateRepository {
     public Optional<Aggregate> findAggregateSnapshot(@NonNull UUID aggregateId,
                                                      @Nullable Integer version) {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("aggregateId", aggregateId);
-        parameters.addValue("version", version, Types.INTEGER);
+        parameters.addValue(SqlParameters.AGGREGATE_ID_PARAM, aggregateId);
+        parameters.addValue(SqlParameters.VERSION_PARAM, version, Types.INTEGER);
 
         return jdbcTemplate.query(
                 SqlQueries.SELECT_AGGREGATE_SNAPSHOT_QUERY,

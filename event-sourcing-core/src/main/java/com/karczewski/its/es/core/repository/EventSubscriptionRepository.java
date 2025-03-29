@@ -11,6 +11,6 @@ public interface EventSubscriptionRepository {
 
     Optional<EventSubscriptionCheckpoint> findCheckpointAndLockSubscription(String subscriptionName);
 
-    boolean updateEventSubscription(String subscriptionName, BigInteger lastProcessedTransactionId, long lastProcessedEventId);
+    void updateEventSubscription(String subscriptionName, BigInteger lastProcessedTransactionId, long lastProcessedEventId);
 
 }

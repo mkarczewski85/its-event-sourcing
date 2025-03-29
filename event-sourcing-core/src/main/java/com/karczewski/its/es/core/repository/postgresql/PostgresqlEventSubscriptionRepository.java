@@ -19,35 +19,35 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostgresqlEventSubscriptionRepository implements EventSubscriptionRepository {
 
+
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public void createSubscriptionIfAbsent(String subscriptionName) {
         jdbcTemplate.update(
                 SqlQueries.INSERT_EVENT_SUBSCRIPTION_QUERY,
-                Map.of("subscriptionName", subscriptionName)
+                Map.of(SqlParameters.SUBSCRIPTION_NAME_PARAM, subscriptionName)
         );
     }
 
     public Optional<EventSubscriptionCheckpoint> findCheckpointAndLockSubscription(String subscriptionName) {
         return jdbcTemplate.query(
                 SqlQueries.SELECT_EVENT_SUBSCRIPTION_QUERY,
-                Map.of("subscriptionName", subscriptionName),
+                Map.of(SqlParameters.SUBSCRIPTION_NAME_PARAM, subscriptionName),
                 this::toEventSubscriptionCheckpoint
         ).stream().findFirst();
     }
 
-    public boolean updateEventSubscription(String subscriptionName,
-                                           BigInteger lastProcessedTransactionId,
-                                           long lastProcessedEventId) {
-        int updatedRows = jdbcTemplate.update(
-                SqlQueries.UPDATE_EVENT_SUBSCRIPTION_QUERY,
-                Map.of(
-                        "subscriptionName", subscriptionName,
-                        "lastProcessedTransactionId", lastProcessedTransactionId.toString(),
-                        "lastProcessedEventId", lastProcessedEventId
-                )
+    public void updateEventSubscription(String subscriptionName,
+                                        BigInteger lastProcessedTransactionId,
+                                        long lastProcessedEventId) {
+        jdbcTemplate.update(
+            SqlQueries.UPDATE_EVENT_SUBSCRIPTION_QUERY,
+            Map.of(
+                    SqlParameters.SUBSCRIPTION_NAME_PARAM, subscriptionName,
+                    SqlParameters.LAST_PROCESSED_TRANSACTION_ID_PARAM, lastProcessedTransactionId.toString(),
+                    SqlParameters.LAST_PROCESSED_EVENT_ID_PARAM, lastProcessedEventId
+            )
         );
-        return updatedRows > 0;
     }
 
     private EventSubscriptionCheckpoint toEventSubscriptionCheckpoint(ResultSet rs, int rowNum) throws SQLException {

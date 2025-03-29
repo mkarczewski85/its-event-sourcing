@@ -38,23 +38,23 @@ public class PostgresqlEventRepository implements EventRepository {
         List<EventWithId<T>> result = jdbcTemplate.query(
                 SqlQueries.INSERT_EVENT_QUERY,
                 Map.of(
-                        "aggregateId", event.getAggregateId(),
-                        "version", event.getVersion(),
-                        "eventType", event.getEventType(),
-                        "jsonObj", objectMapper.writeValueAsString(event)
+                        SqlParameters.AGGREGATE_ID_PARAM, event.getAggregateId(),
+                        SqlParameters.VERSION_PARAM, event.getVersion(),
+                        SqlParameters.EVENT_TYPE_PARAM, event.getEventType(),
+                        SqlParameters.JSON_OBJ_PARAM, objectMapper.writeValueAsString(event)
                 ),
                 this::toEvent
         );
-        return result.get(0);
+        return result.getFirst();
     }
 
     public Collection<EventWithId<Event>> readEvents(@NonNull UUID aggregateId,
                                                      @Nullable Integer fromVersion,
                                                      @Nullable Integer toVersion) {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("aggregateId", aggregateId);
-        parameters.addValue("fromVersion", fromVersion, Types.INTEGER);
-        parameters.addValue("toVersion", toVersion, Types.INTEGER);
+        parameters.addValue(SqlParameters.AGGREGATE_ID_PARAM, aggregateId);
+        parameters.addValue(SqlParameters.FROM_VERSION_PARAM, fromVersion, Types.INTEGER);
+        parameters.addValue(SqlParameters.TO_VERSION_PARAM, toVersion, Types.INTEGER);
 
         return jdbcTemplate.query(
                 SqlQueries.READ_EVENTS_QUERY,
@@ -69,9 +69,9 @@ public class PostgresqlEventRepository implements EventRepository {
         return jdbcTemplate.query(
                 SqlQueries.READ_EVENTS_AFTER_CHECKPOINT_QUERY,
                 Map.of(
-                        "aggregateType", aggregateType,
-                        "lastProcessedTransactionId", lastProcessedTransactionId.toString(),
-                        "lastProcessedEventId", lastProcessedEventId
+                        SqlParameters.AGGREGATE_TYPE_PARAM, aggregateType,
+                        SqlParameters.LAST_PROCESSED_TRANSACTION_ID_PARAM, lastProcessedTransactionId.toString(),
+                        SqlParameters.LAST_PROCESSED_EVENT_ID_PARAM, lastProcessedEventId
                 ),
                 this::toEvent
         );

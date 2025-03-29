@@ -63,7 +63,7 @@ public class EventSubscriptionProcessor {
     }
 
     private void updateSubscriptionCheckpoint(String subscriptionName, List<EventWithId<Event>> events) {
-        EventWithId<Event> lastEvent = events.get(events.size() - 1);
+        EventWithId<Event> lastEvent = events.getLast();
         subscriptionRepository.updateEventSubscription(
                 subscriptionName,
                 lastEvent.transactionId(),
