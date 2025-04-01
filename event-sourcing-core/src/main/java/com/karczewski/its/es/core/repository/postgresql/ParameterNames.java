@@ -1,8 +1,8 @@
 package com.karczewski.its.es.core.repository.postgresql;
 
-public final class SqlParameters {
+public final class ParameterNames {
 
-    private SqlParameters() {
+    private ParameterNames() {
     }
 
     static final String SUBSCRIPTION_NAME_PARAM = "subscriptionName";

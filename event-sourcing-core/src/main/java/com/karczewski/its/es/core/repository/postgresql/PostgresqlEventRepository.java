@@ -38,10 +38,10 @@ public class PostgresqlEventRepository implements EventRepository {
         List<EventWithId<T>> result = jdbcTemplate.query(
                 SqlQueries.INSERT_EVENT_QUERY,
                 Map.of(
-                        SqlParameters.AGGREGATE_ID_PARAM, event.getAggregateId(),
-                        SqlParameters.VERSION_PARAM, event.getVersion(),
-                        SqlParameters.EVENT_TYPE_PARAM, event.getEventType(),
-                        SqlParameters.JSON_OBJ_PARAM, objectMapper.writeValueAsString(event)
+                        ParameterNames.AGGREGATE_ID_PARAM, event.getAggregateId(),
+                        ParameterNames.VERSION_PARAM, event.getVersion(),
+                        ParameterNames.EVENT_TYPE_PARAM, event.getEventType(),
+                        ParameterNames.JSON_OBJ_PARAM, objectMapper.writeValueAsString(event)
                 ),
                 this::toEvent
         );
@@ -52,9 +52,9 @@ public class PostgresqlEventRepository implements EventRepository {
                                                      @Nullable Integer fromVersion,
                                                      @Nullable Integer toVersion) {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue(SqlParameters.AGGREGATE_ID_PARAM, aggregateId);
-        parameters.addValue(SqlParameters.FROM_VERSION_PARAM, fromVersion, Types.INTEGER);
-        parameters.addValue(SqlParameters.TO_VERSION_PARAM, toVersion, Types.INTEGER);
+        parameters.addValue(ParameterNames.AGGREGATE_ID_PARAM, aggregateId);
+        parameters.addValue(ParameterNames.FROM_VERSION_PARAM, fromVersion, Types.INTEGER);
+        parameters.addValue(ParameterNames.TO_VERSION_PARAM, toVersion, Types.INTEGER);
 
         return jdbcTemplate.query(
                 SqlQueries.READ_EVENTS_QUERY,
@@ -69,9 +69,9 @@ public class PostgresqlEventRepository implements EventRepository {
         return jdbcTemplate.query(
                 SqlQueries.READ_EVENTS_AFTER_CHECKPOINT_QUERY,
                 Map.of(
-                        SqlParameters.AGGREGATE_TYPE_PARAM, aggregateType,
-                        SqlParameters.LAST_PROCESSED_TRANSACTION_ID_PARAM, lastProcessedTransactionId.toString(),
-                        SqlParameters.LAST_PROCESSED_EVENT_ID_PARAM, lastProcessedEventId
+                        ParameterNames.AGGREGATE_TYPE_PARAM, aggregateType,
+                        ParameterNames.LAST_PROCESSED_TRANSACTION_ID_PARAM, lastProcessedTransactionId.toString(),
+                        ParameterNames.LAST_PROCESSED_EVENT_ID_PARAM, lastProcessedEventId
                 ),
                 this::toEvent
         );
@@ -80,10 +80,10 @@ public class PostgresqlEventRepository implements EventRepository {
     @SuppressWarnings("unchecked")
     @SneakyThrows
     private <T extends Event> EventWithId<T> toEvent(ResultSet rs, int rowNum) {
-        long id = rs.getLong("ID");
-        String transactionId = rs.getString("TRANSACTION_ID");
-        String eventType = rs.getString("EVENT_TYPE");
-        PGobject jsonObj = (PGobject) rs.getObject("JSON_DATA");
+        long id = rs.getLong(ColumnNames.ID_COLUMN);
+        String transactionId = rs.getString(ColumnNames.TRANSACTION_ID_COLUMN);
+        String eventType = rs.getString(ColumnNames.EVENT_TYPE_COLUMN);
+        PGobject jsonObj = (PGobject) rs.getObject(ColumnNames.JSON_DATA_COLUMN);
         String json = jsonObj.getValue();
         Class<? extends Event> eventClass = eventTypeMapper.getClassByEventType(eventType);
         Event event = objectMapper.readValue(json, eventClass);

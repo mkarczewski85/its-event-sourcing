@@ -35,8 +35,8 @@ public class PostgresqlAggregateRepository implements AggregateRepository {
         jdbcTemplate.update(
                 SqlQueries.INSERT_AGGREGATE_QUERY,
                 Map.of(
-                        SqlParameters.AGGREGATE_ID_PARAM, aggregateId,
-                        SqlParameters.AGGREGATE_TYPE_PARAM, aggregateType
+                        ParameterNames.AGGREGATE_ID_PARAM, aggregateId,
+                        ParameterNames.AGGREGATE_TYPE_PARAM, aggregateType
                 )
         );
     }
@@ -47,9 +47,9 @@ public class PostgresqlAggregateRepository implements AggregateRepository {
         int updatedRows = jdbcTemplate.update(
                 SqlQueries.UPDATE_AGGREGATE_QUERY,
                 Map.of(
-                        SqlParameters.NEW_VERSION_PARAM, newVersion,
-                        SqlParameters.AGGREGATE_ID_PARAM, aggregateId,
-                        SqlParameters.EXPECTED_VERSION_PARAM, expectedVersion
+                        ParameterNames.NEW_VERSION_PARAM, newVersion,
+                        ParameterNames.AGGREGATE_ID_PARAM, aggregateId,
+                        ParameterNames.EXPECTED_VERSION_PARAM, expectedVersion
                 )
         );
         return updatedRows > 0;
@@ -60,9 +60,9 @@ public class PostgresqlAggregateRepository implements AggregateRepository {
         jdbcTemplate.update(
                 SqlQueries.INSERT_AGGREGATE_SNAPSHOT_QUERY,
                 Map.of(
-                        SqlParameters.AGGREGATE_ID_PARAM, aggregate.getAggregateId(),
-                        SqlParameters.VERSION_PARAM, aggregate.getVersion(),
-                        SqlParameters.JSON_OBJ_PARAM, objectMapper.writeValueAsString(aggregate)
+                        ParameterNames.AGGREGATE_ID_PARAM, aggregate.getAggregateId(),
+                        ParameterNames.VERSION_PARAM, aggregate.getVersion(),
+                        ParameterNames.JSON_OBJ_PARAM, objectMapper.writeValueAsString(aggregate)
                 )
         );
     }
@@ -70,8 +70,8 @@ public class PostgresqlAggregateRepository implements AggregateRepository {
     public Optional<Aggregate> findAggregateSnapshot(@NonNull UUID aggregateId,
                                                      @Nullable Integer version) {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue(SqlParameters.AGGREGATE_ID_PARAM, aggregateId);
-        parameters.addValue(SqlParameters.VERSION_PARAM, version, Types.INTEGER);
+        parameters.addValue(ParameterNames.AGGREGATE_ID_PARAM, aggregateId);
+        parameters.addValue(ParameterNames.VERSION_PARAM, version, Types.INTEGER);
 
         return jdbcTemplate.query(
                 SqlQueries.SELECT_AGGREGATE_SNAPSHOT_QUERY,
@@ -82,8 +82,8 @@ public class PostgresqlAggregateRepository implements AggregateRepository {
 
     @SneakyThrows
     private Aggregate toAggregate(ResultSet rs, int rowNum) {
-        String aggregateType = rs.getString("AGGREGATE_TYPE");
-        PGobject jsonObj = (PGobject) rs.getObject("JSON_DATA");
+        String aggregateType = rs.getString(ColumnNames.AGGREGATE_TYPE_COLUMN);
+        PGobject jsonObj = (PGobject) rs.getObject(ColumnNames.JSON_DATA_COLUMN);
         String json = jsonObj.getValue();
         Class<? extends Aggregate> aggregateClass = aggregateTypeMapper.getClassByAggregateType(aggregateType);
         return objectMapper.readValue(json, aggregateClass);
