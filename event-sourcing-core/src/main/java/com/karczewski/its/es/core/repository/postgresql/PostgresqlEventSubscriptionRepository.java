@@ -2,6 +2,9 @@ package com.karczewski.its.es.core.repository.postgresql;
 
 import com.karczewski.its.es.core.domain.event.EventSubscriptionCheckpoint;
 import com.karczewski.its.es.core.repository.EventSubscriptionRepository;
+import com.karczewski.its.es.core.repository.postgresql.constants.ParameterNames;
+import com.karczewski.its.es.core.repository.postgresql.constants.SqlQueries;
+import com.karczewski.its.es.core.repository.postgresql.helpers.RowMappers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -9,8 +12,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class PostgresqlEventSubscriptionRepository implements EventSubscriptionRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final RowMappers rowMappers;
 
     public void createSubscriptionIfAbsent(String subscriptionName) {
         jdbcTemplate.update(
@@ -32,7 +34,7 @@ public class PostgresqlEventSubscriptionRepository implements EventSubscriptionR
         return jdbcTemplate.query(
                 SqlQueries.SELECT_EVENT_SUBSCRIPTION_QUERY,
                 Map.of(ParameterNames.SUBSCRIPTION_NAME_PARAM, subscriptionName),
-                this::toEventSubscriptionCheckpoint
+                rowMappers::mapEventSubscriptionCheckpoint
         ).stream().findFirst();
     }
 
@@ -47,12 +49,6 @@ public class PostgresqlEventSubscriptionRepository implements EventSubscriptionR
                     ParameterNames.LAST_PROCESSED_EVENT_ID_PARAM, lastProcessedEventId
             )
         );
-    }
-
-    private EventSubscriptionCheckpoint toEventSubscriptionCheckpoint(ResultSet rs, int rowNum) throws SQLException {
-        String lastProcessedTransactionId = rs.getString(ColumnNames.LAST_TRANSACTION_ID_COLUMN);
-        long lastProcessedEventId = rs.getLong(ColumnNames.LAST_EVENT_ID_COLUMN);
-        return new EventSubscriptionCheckpoint(new BigInteger(lastProcessedTransactionId), lastProcessedEventId);
     }
 
 }
