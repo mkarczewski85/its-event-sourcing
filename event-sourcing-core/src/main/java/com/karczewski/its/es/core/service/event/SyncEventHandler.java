@@ -6,7 +6,6 @@ import com.karczewski.its.es.core.domain.event.EventWithId;
 import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
-import java.util.List;
 
 public interface SyncEventHandler {
 
