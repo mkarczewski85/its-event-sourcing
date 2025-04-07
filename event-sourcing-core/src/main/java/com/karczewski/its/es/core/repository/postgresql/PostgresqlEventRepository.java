@@ -6,7 +6,7 @@ import com.karczewski.its.es.core.repository.EventRepository;
 import com.karczewski.its.es.core.repository.postgresql.constants.ParameterNames;
 import com.karczewski.its.es.core.repository.postgresql.constants.SqlQueries;
 import com.karczewski.its.es.core.repository.postgresql.helpers.JsonMapper;
-import com.karczewski.its.es.core.repository.postgresql.helpers.RowMappers;
+import com.karczewski.its.es.core.repository.postgresql.helpers.RowMapper;
 import jakarta.annotation.Nullable;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class PostgresqlEventRepository implements EventRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final JsonMapper jsonMapper;
-    private final RowMappers rowMappers;
+    private final RowMapper rowMapper;
 
     @Override
     public <T extends Event> EventWithId<T> appendEvent(@NonNull Event event) {
@@ -38,7 +38,7 @@ public class PostgresqlEventRepository implements EventRepository {
         List<EventWithId<T>> result = jdbcTemplate.query(
                 SqlQueries.INSERT_EVENT_QUERY,
                 appendEventParams(event.getAggregateId(), event.getVersion(), event.getEventType(), json),
-                rowMappers::mapEventWithId
+                rowMapper::mapEventWithId
         );
         return result.getFirst();
     }
@@ -50,7 +50,7 @@ public class PostgresqlEventRepository implements EventRepository {
         return jdbcTemplate.query(
                 SqlQueries.READ_EVENTS_QUERY,
                 readEventsParameters(aggregateId, fromVersion, toVersion),
-                rowMappers::mapEventWithId
+                rowMapper::mapEventWithId
         );
     }
 
@@ -61,7 +61,7 @@ public class PostgresqlEventRepository implements EventRepository {
         return jdbcTemplate.query(
                 SqlQueries.READ_EVENTS_AFTER_CHECKPOINT_QUERY,
                 readEventsAfterCheckpointParams(aggregateType, lastProcessedTransactionId, lastProcessedEventId),
-                rowMappers::mapEventWithId
+                rowMapper::mapEventWithId
         );
     }
 

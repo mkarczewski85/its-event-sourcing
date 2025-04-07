@@ -5,7 +5,7 @@ import com.karczewski.its.es.core.repository.AggregateRepository;
 import com.karczewski.its.es.core.repository.postgresql.constants.ParameterNames;
 import com.karczewski.its.es.core.repository.postgresql.constants.SqlQueries;
 import com.karczewski.its.es.core.repository.postgresql.helpers.JsonMapper;
-import com.karczewski.its.es.core.repository.postgresql.helpers.RowMappers;
+import com.karczewski.its.es.core.repository.postgresql.helpers.RowMapper;
 import jakarta.annotation.Nullable;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class PostgresqlAggregateRepository implements AggregateRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final JsonMapper jsonMapper;
-    private final RowMappers rowMappers;
+    private final RowMapper rowMapper;
 
     @Override
     public void createAggregateIfAbsent(@NonNull String aggregateType,
@@ -64,7 +64,7 @@ public class PostgresqlAggregateRepository implements AggregateRepository {
         return jdbcTemplate.query(
                 SqlQueries.SELECT_AGGREGATE_SNAPSHOT_QUERY,
                 findAggregateSnapshotParams(aggregateId, version),
-                rowMappers::mapToAggregate
+                rowMapper::mapToAggregate
         ).stream().findFirst();
     }
 

@@ -4,7 +4,7 @@ import com.karczewski.its.es.core.domain.event.EventSubscriptionCheckpoint;
 import com.karczewski.its.es.core.repository.EventSubscriptionRepository;
 import com.karczewski.its.es.core.repository.postgresql.constants.ParameterNames;
 import com.karczewski.its.es.core.repository.postgresql.constants.SqlQueries;
-import com.karczewski.its.es.core.repository.postgresql.helpers.RowMappers;
+import com.karczewski.its.es.core.repository.postgresql.helpers.RowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class PostgresqlEventSubscriptionRepository implements EventSubscriptionRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final RowMappers rowMappers;
+    private final RowMapper rowMapper;
 
     public void createSubscriptionIfAbsent(String subscriptionName) {
         jdbcTemplate.update(
@@ -34,7 +34,7 @@ public class PostgresqlEventSubscriptionRepository implements EventSubscriptionR
         return jdbcTemplate.query(
                 SqlQueries.SELECT_EVENT_SUBSCRIPTION_QUERY,
                 Map.of(ParameterNames.SUBSCRIPTION_NAME_PARAM, subscriptionName),
-                rowMappers::mapEventSubscriptionCheckpoint
+                rowMapper::mapEventSubscriptionCheckpoint
         ).stream().findFirst();
     }
 

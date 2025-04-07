@@ -18,7 +18,7 @@ import java.sql.SQLException;
 @SuppressWarnings("unchecked")
 @Component
 @RequiredArgsConstructor
-public class RowMappers {
+public final class RowMapper {
 
     private final JsonMapper jsonMapper;
     private final AggregateTypeMapper aggregateTypeMapper;
