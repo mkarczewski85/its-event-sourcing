@@ -3,9 +3,10 @@ package com.karczewski.its.es.core.service;
 import com.karczewski.its.es.core.domain.aggregate.Aggregate;
 import com.karczewski.its.es.core.domain.aggregate.AggregateTypeMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
 @Component
@@ -14,11 +15,15 @@ public class AggregateFactory {
 
     private final AggregateTypeMapper aggregateTypeMapper;
 
-    @SneakyThrows(ReflectiveOperationException.class)
     @SuppressWarnings("unchecked")
     public <T extends Aggregate> T newInstance(String aggregateType, UUID aggregateId) {
         Class<? extends Aggregate> aggregateClass = aggregateTypeMapper.getClassByAggregateType(aggregateType);
-        var constructor = aggregateClass.getDeclaredConstructor(UUID.class, Integer.TYPE);
-        return (T) constructor.newInstance(aggregateId, 0);
+        try {
+            Constructor<? extends Aggregate> constructor = aggregateClass.getDeclaredConstructor(UUID.class, int.class);
+            return (T) constructor.newInstance(aggregateId, 0);
+        } catch (NoSuchMethodException | InstantiationException |
+                 IllegalAccessException | InvocationTargetException e) {
+            throw new IllegalStateException("Failed to instantiate aggregate: " + aggregateClass.getName(), e);
+        }
     }
 }

@@ -59,7 +59,8 @@ public class AggregateStore {
         return newEvents;
     }
 
-    private void maybeCreateSnapshot(EventSourcingProperties.SnapshottingProperties snapshotting, Aggregate aggregate) {
+    private void maybeCreateSnapshot(EventSourcingProperties.SnapshottingProperties snapshotting,
+                                     Aggregate aggregate) {
         if (shouldCreateSnapshot(snapshotting, aggregate)) {
             log.info("Creating {} aggregate {} version {} snapshot",
                     aggregate.getAggregateType(), aggregate.getAggregateId(), aggregate.getVersion());
@@ -67,8 +68,9 @@ public class AggregateStore {
         }
     }
 
-    private boolean shouldCreateSnapshot(EventSourcingProperties.SnapshottingProperties snapshotting, Aggregate aggregate) {
-        return snapshotting.enabled() && snapshotting.nthEvent() > 1 && aggregate.getVersion() % snapshotting.nthEvent() == 0;
+    private boolean shouldCreateSnapshot(EventSourcingProperties.SnapshottingProperties snapshotting,
+                                         Aggregate aggregate) {
+        return snapshotting.enabled() && aggregate.getVersion() % snapshotting.nthEvent() == 0;
     }
 
     public Aggregate readAggregate(String aggregateType, UUID aggregateId) {
