@@ -83,7 +83,8 @@ public class IssueProjectionQueryService implements IssueProjectionQueryClient {
     }
 
     @Override
-    public List<UserIssueCount> getUserAssignmentsCount() {
-        return userRepository.getUserAssignedIssuesCount();
+    public List<UserIssueCount> getUserAssignmentsCount(int limit) {
+        PageRequest pageable = PageRequest.of(0, limit);
+        return userRepository.getUserAssignedIssuesCount(pageable);
     }
 }

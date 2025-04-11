@@ -2,6 +2,7 @@ package com.karczewski.its.query.repository;
 
 import com.karczewski.its.query.entity.User;
 import com.karczewski.its.query.entity.UserIssueCount;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -27,5 +28,5 @@ public interface UserRepository extends CrudRepository<User, UUID>,
             GROUP BY u.id
             ORDER BY COUNT(i.id) ASC
             """)
-    List<UserIssueCount> getUserAssignedIssuesCount();
+    List<UserIssueCount> getUserAssignedIssuesCount(Pageable pageable);
 }

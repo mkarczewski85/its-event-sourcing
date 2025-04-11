@@ -22,6 +22,6 @@ public interface IssueProjectionQueryClient {
 
     Collection<IssueProjection> getAllUnassignedIssues();
 
-    List<UserIssueCount> getUserAssignmentsCount();
-    
+    List<UserIssueCount> getUserAssignmentsCount(int limit);
+
 }

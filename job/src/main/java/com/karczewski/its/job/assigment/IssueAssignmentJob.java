@@ -31,7 +31,7 @@ public class IssueAssignmentJob {
             log.debug("No unassigned issues found.");
             return;
         }
-        List<UserIssueCount> userAssignmentsCount = queryClient.getUserAssignmentsCount();
+        List<UserIssueCount> userAssignmentsCount = queryClient.getUserAssignmentsCount(allUnassigned.size());
         Iterator<UserIssueCount> cyclicIterator = new CyclicIterator<>(userAssignmentsCount);
         allUnassigned.stream()
                 .map(IssueProjection::getId)
