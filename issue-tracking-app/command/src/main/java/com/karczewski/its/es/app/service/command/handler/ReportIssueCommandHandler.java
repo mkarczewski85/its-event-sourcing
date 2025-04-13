@@ -1,16 +1,16 @@
-package com.karczewski.its.es.app.service.command;
+package com.karczewski.its.es.app.service.command.handler;
 
-import com.karczewski.its.es.app.domain.command.AssignIssueCommand;
 import com.karczewski.its.es.core.domain.aggregate.Aggregate;
 import com.karczewski.its.es.core.domain.command.Command;
 import com.karczewski.its.es.core.service.command.CommandHandler;
+import com.karczewski.its.es.app.domain.command.ReportIssueCommand;
 import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class AssignIssueCommandHandler implements CommandHandler<AssignIssueCommand> {
+public class ReportIssueCommandHandler implements CommandHandler<ReportIssueCommand> {
     @Override
     public void handle(Aggregate aggregate, Command command) {
         aggregate.processCommand(command);
@@ -18,7 +18,7 @@ public class AssignIssueCommandHandler implements CommandHandler<AssignIssueComm
 
     @Nonnull
     @Override
-    public Class<AssignIssueCommand> getCommandType() {
-        return AssignIssueCommand.class;
+    public Class<ReportIssueCommand> getCommandType() {
+        return ReportIssueCommand.class;
     }
 }

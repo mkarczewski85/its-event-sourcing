@@ -1,6 +1,6 @@
-package com.karczewski.its.es.app.service.command;
+package com.karczewski.its.es.app.service.command.handler;
 
-import com.karczewski.its.es.app.domain.command.RejectIssueCommand;
+import com.karczewski.its.es.app.domain.command.AssignIssueCommand;
 import com.karczewski.its.es.core.domain.aggregate.Aggregate;
 import com.karczewski.its.es.core.domain.command.Command;
 import com.karczewski.its.es.core.service.command.CommandHandler;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class RejectIssueCommandHandler implements CommandHandler<RejectIssueCommand> {
+public class AssignIssueCommandHandler implements CommandHandler<AssignIssueCommand> {
     @Override
     public void handle(Aggregate aggregate, Command command) {
         aggregate.processCommand(command);
@@ -18,7 +18,7 @@ public class RejectIssueCommandHandler implements CommandHandler<RejectIssueComm
 
     @Nonnull
     @Override
-    public Class<RejectIssueCommand> getCommandType() {
-        return RejectIssueCommand.class;
+    public Class<AssignIssueCommand> getCommandType() {
+        return AssignIssueCommand.class;
     }
 }

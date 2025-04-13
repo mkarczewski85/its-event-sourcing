@@ -1,4 +1,4 @@
-package com.karczewski.its.es.app.service.command;
+package com.karczewski.its.es.app.service.command.handler;
 
 import com.karczewski.its.es.core.domain.aggregate.Aggregate;
 import com.karczewski.its.es.core.domain.command.Command;
