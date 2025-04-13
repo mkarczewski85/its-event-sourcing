@@ -9,6 +9,7 @@ spring-docs = "2.7.0"
 junit-version = "5.10.1"
 jackson-version = "2.18.1"
 micrometer-version = "1.14.2"
+shedlock = "6.3.1"
 
 [libraries]
 # spring
@@ -37,11 +38,14 @@ jwt-impl = { module = "io.jsonwebtoken:jjwt-impl ", version.ref = "jwt" }
 jwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jwt" }
 jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson-version" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson-version" }
+shedlock-spring = { module = "net.javacrumbs.shedlock:shedlock-spring", version.ref = "shedlock" }
+shedlock-jdbc = { module = "net.javacrumbs.shedlock:shedlock-provider-jdbc-template", version.ref = "shedlock" }
 
 [bundles]
 junit = ["junit-api", "junit-engine"]
 jwt = ["jwt-api", "jwt-impl", "jwt-jackson"]
 jackson = ["jackson-annotations", "jackson-databind"]
+shedlock = ["shedlock-spring", "shedlock-jdbc"]
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }

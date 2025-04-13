@@ -6,6 +6,7 @@ import com.karczewski.its.query.entity.IssueProjection;
 import com.karczewski.its.query.entity.UserIssueCount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,11 @@ public class IssueAssignmentJob {
     @Scheduled(
             fixedDelayString = "${issues.assigment.polling-interval}",
             initialDelayString = "${issues.assigment.polling-initial-delay}"
+    )
+    @SchedulerLock(
+            name = "IssueAssignmentTaskLock",
+            lockAtMostFor = "${issues.assigment.polling-interval}",
+            lockAtLeastFor = "${issues.assigment.polling-interval}"
     )
     public void assignReportedIssues() {
         Collection<IssueProjection> allUnassigned = queryClient.getAllUnassignedIssues();

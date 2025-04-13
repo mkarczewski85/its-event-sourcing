@@ -79,8 +79,8 @@ event-sourcing:
       enabled: true
       nth-event: 20
   subscriptions:
-    polling-initial-delay: PT1S
-    polling-interval: PT1S
+    polling-initial-delay: PT1M
+    polling-interval: PT1M
 
 ### issue assignments
 issues:

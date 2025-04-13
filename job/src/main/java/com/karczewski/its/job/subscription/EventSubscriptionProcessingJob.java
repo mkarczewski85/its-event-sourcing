@@ -4,6 +4,7 @@ import com.karczewski.its.es.core.service.EventSubscriptionProcessor;
 import com.karczewski.its.es.core.service.event.AsyncEventHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,11 @@ public class EventSubscriptionProcessingJob {
     @Scheduled(
             fixedDelayString = "${event-sourcing.subscriptions.polling-interval}",
             initialDelayString = "${event-sourcing.subscriptions.polling-initial-delay}"
+    )
+    @SchedulerLock(
+            name = "EventSubscriptionTaskLock",
+            lockAtMostFor = "${event-sourcing.subscriptions.polling-interval}",
+            lockAtLeastFor = "${event-sourcing.subscriptions.polling-interval}"
     )
     public void processNewEvents() {
         eventHandlers.forEach(this::processNewEvents);
