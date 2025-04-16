@@ -8,8 +8,8 @@ dependencies {
     implementation project(':user-management')
     implementation project(':security')
     implementation project(':attachments')
-    implementation project(':issue-tracking-app:command')
-    implementation project(':issue-tracking-app:query')
+    implementation project(':issue:command')
+    implementation project(':issue:query')
 
     implementation libs.spring.boot.web
     implementation libs.spring.boot.validation

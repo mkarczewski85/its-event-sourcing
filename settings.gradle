@@ -1,8 +1,10 @@
 rootProject.name = 'its'
 
 include('event-sourcing-core')
-include('issue-tracking-app:command')
-include('issue-tracking-app:query')
+include('issue:command')
+include('issue:query')
+include('user:command')
+include('user:query')
 include('user-management')
 include('api')
 include('job')

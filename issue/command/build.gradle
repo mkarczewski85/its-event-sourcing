@@ -1,3 +1,4 @@
+
 plugins {
     id 'java-library'
     id 'com.karczewski.its.common-conventions'
@@ -6,9 +7,9 @@ plugins {
 dependencies {
     api project(':event-sourcing-core')
     implementation project(':issue:query')
-    implementation project(':issue:command')
     implementation project(':user-management')
 
     implementation libs.spring.boot.starter
-    implementation libs.bundles.shedlock
+    implementation libs.spring.boot.rabbit
+    implementation libs.bundles.jackson
 }

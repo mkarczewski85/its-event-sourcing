@@ -21,6 +21,8 @@ services:
     volumes:
       - 'rabbitmq_data:/data'
 
+  
+
 #  prometheus:
 #    image: prom/prometheus:v2.46.0
 #    ports:

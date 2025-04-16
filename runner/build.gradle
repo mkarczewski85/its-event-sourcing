@@ -7,7 +7,8 @@ dependencies {
     implementation project(':api')
     implementation project(':security')
     implementation project(':job')
-    implementation project(':issue-tracking-app')
+    implementation project(':issue:command')
+    implementation project(':issue:query')
     implementation project(':user-management')
 
     implementation libs.spring.boot.starter
