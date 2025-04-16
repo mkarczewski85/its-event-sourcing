@@ -6,8 +6,6 @@ import com.karczewski.its.es.core.domain.event.Event;
 import com.karczewski.its.es.core.domain.event.EventWithId;
 import com.karczewski.its.es.core.service.command.CommandHandler;
 import com.karczewski.its.es.core.service.command.CommandInterceptor;
-import com.karczewski.its.es.core.service.command.DefaultCommandHandler;
-import com.karczewski.its.es.core.service.command.DefaultCommandInterceptor;
 import com.karczewski.its.es.core.service.event.SyncEventHandler;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.NonNull;
@@ -29,8 +27,6 @@ public class CommandProcessor {
     private final AggregateStore aggregateStore;
     private final Set<CommandHandler<? extends Command>> commandHandlers;
     private final Set<CommandInterceptor<? extends Command>> commandInterceptors;
-    private final DefaultCommandHandler defaultCommandHandler;
-    private final DefaultCommandInterceptor defaultCommandInterceptor;
     private final Set<SyncEventHandler> aggregateChangesHandlers;
 
     public void process(@NotEmpty Collection<Command> commands) {
@@ -86,14 +82,12 @@ public class CommandProcessor {
     private Optional<CommandInterceptor<? extends Command>> findInterceptorForCommand(Command command) {
         return commandInterceptors.stream()
                 .filter(interceptor -> interceptor.getCommandType() == command.getClass())
-                .findFirst()
-                .or(() -> Optional.of(defaultCommandInterceptor));
+                .findFirst();
     }
 
     private Optional<CommandHandler<? extends Command>> findHandlerForCommand(Command command) {
         return commandHandlers.stream()
                 .filter(handler -> handler.getCommandType() == command.getClass())
-                .findFirst()
-                .or(() -> Optional.of(defaultCommandHandler));
+                .findFirst();
     }
 }
