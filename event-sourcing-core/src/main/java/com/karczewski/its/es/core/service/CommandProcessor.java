@@ -59,14 +59,14 @@ public class CommandProcessor {
     }
 
     private void handleCommand(Command command, Aggregate aggregate) {
-        findHandlerForCommand(command)
-                .ifPresent(
-                        handler -> {
-                            log.debug("Handling command {} with {}",
-                                    command.getClass().getSimpleName(),
-                                    handler.getClass().getSimpleName());
-                            handler.handle(aggregate, command);
-                        });
+        CommandHandler<? extends Command> handler = findHandlerForCommand(command).orElseThrow(
+                () -> new IllegalStateException(
+                        "No handler found for command type: " + command.getClass().getSimpleName())
+        );
+        log.debug("Handling command {} with {}",
+                command.getClass().getSimpleName(),
+                handler.getClass().getSimpleName());
+        handler.handle(aggregate, command);
     }
 
     private Collection<EventWithId<Event>> saveAggregate(Aggregate aggregate) {
