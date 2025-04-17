@@ -1,6 +1,6 @@
 package com.karczewski.its.job.assigment;
 
-import com.karczewski.its.es.app.domain.command.AssignIssueCommand;
+import com.karczewski.its.es.issue.domain.command.AssignIssueCommand;
 import com.karczewski.its.es.core.service.CommandProcessor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

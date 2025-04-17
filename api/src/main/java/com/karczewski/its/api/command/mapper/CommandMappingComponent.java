@@ -2,7 +2,7 @@ package com.karczewski.its.api.command.mapper;
 
 import com.karczewski.its.api.command.dto.request.*;
 import com.karczewski.its.attachments.dto.AttachmentsUploadDto;
-import com.karczewski.its.es.app.domain.command.*;
+import com.karczewski.its.es.issue.domain.command.*;
 import com.karczewski.its.es.core.domain.command.Command;
 import com.karczewski.its.security.authentication.AuthenticationClient;
 import lombok.RequiredArgsConstructor;
