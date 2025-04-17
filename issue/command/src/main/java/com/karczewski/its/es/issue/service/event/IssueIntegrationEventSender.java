@@ -2,11 +2,11 @@ package com.karczewski.its.es.issue.service.event;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.karczewski.its.es.issue.config.RabbitMQConfiguration;
-import com.karczewski.its.es.issue.domain.aggregate.AggregateType;
 import com.karczewski.its.es.core.domain.event.Event;
 import com.karczewski.its.es.core.domain.event.EventWithId;
 import com.karczewski.its.es.core.service.event.AsyncEventHandler;
+import com.karczewski.its.es.issue.config.RabbitMQConfiguration;
+import com.karczewski.its.es.issue.domain.aggregate.IssueAggregate;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class IssueIntegrationEventSender implements AsyncEventHandler {
     @Nonnull
     @Override
     public String getAggregateType() {
-        return AggregateType.ISSUE.toString();
+        return IssueAggregate.AGGREGATE_TYPE_NAME;
     }
 
     private String toJSON(EventWithId<Event> event) {

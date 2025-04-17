@@ -1,7 +1,7 @@
 package com.karczewski.its.es.issue.domain.command;
 
-import com.karczewski.its.es.issue.domain.aggregate.AggregateType;
 import com.karczewski.its.es.core.domain.command.Command;
+import com.karczewski.its.es.issue.domain.aggregate.IssueAggregate;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -14,7 +14,7 @@ public final class RejectIssueCommand extends Command {
     private final UUID rejectedBy;
 
     public RejectIssueCommand(UUID aggregateId, UUID rejectedBy) {
-        super(AggregateType.ISSUE.toString(), aggregateId);
+        super(IssueAggregate.AGGREGATE_TYPE_NAME, aggregateId);
         this.rejectedBy = rejectedBy;
     }
 }

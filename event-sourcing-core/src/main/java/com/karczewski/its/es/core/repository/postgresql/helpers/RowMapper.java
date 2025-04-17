@@ -1,12 +1,12 @@
 package com.karczewski.its.es.core.repository.postgresql.helpers;
 
 import com.karczewski.its.es.core.domain.aggregate.Aggregate;
-import com.karczewski.its.es.core.domain.aggregate.AggregateTypeMapper;
 import com.karczewski.its.es.core.domain.event.Event;
 import com.karczewski.its.es.core.domain.event.EventSubscriptionCheckpoint;
 import com.karczewski.its.es.core.domain.event.EventTypeMapper;
 import com.karczewski.its.es.core.domain.event.EventWithId;
 import com.karczewski.its.es.core.repository.postgresql.constants.ColumnNames;
+import com.karczewski.its.es.core.service.AggregateClassResolver;
 import lombok.RequiredArgsConstructor;
 import org.postgresql.util.PGobject;
 import org.springframework.stereotype.Component;
@@ -21,14 +21,14 @@ import java.sql.SQLException;
 public final class RowMapper {
 
     private final JsonMapper jsonMapper;
-    private final AggregateTypeMapper aggregateTypeMapper;
     private final EventTypeMapper eventTypeMapper;
+    private final AggregateClassResolver aggregateClassResolver;
 
     public Aggregate mapToAggregate(ResultSet resultSet, int rowNum) throws SQLException {
         String aggregateType = resultSet.getString(ColumnNames.AGGREGATE_TYPE_COLUMN);
         PGobject jsonObj = (PGobject) resultSet.getObject(ColumnNames.JSON_DATA_COLUMN);
         String json = jsonObj.getValue();
-        Class<? extends Aggregate> aggregateClass = aggregateTypeMapper.getClassByAggregateType(aggregateType);
+        Class<? extends Aggregate> aggregateClass = aggregateClassResolver.getAggregateClass(aggregateType);
         return jsonMapper.fromJson(json, aggregateClass);
     }
 

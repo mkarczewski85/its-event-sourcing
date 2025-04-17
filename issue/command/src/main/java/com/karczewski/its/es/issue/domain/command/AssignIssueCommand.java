@@ -1,7 +1,7 @@
 package com.karczewski.its.es.issue.domain.command;
 
-import com.karczewski.its.es.issue.domain.aggregate.AggregateType;
 import com.karczewski.its.es.core.domain.command.Command;
+import com.karczewski.its.es.issue.domain.aggregate.IssueAggregate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -16,7 +16,7 @@ public class AssignIssueCommand extends Command {
 
     @Builder
     public AssignIssueCommand(UUID aggregateId, UUID assignedTo) {
-        super(AggregateType.ISSUE.toString(), aggregateId);
+        super(IssueAggregate.AGGREGATE_TYPE_NAME, aggregateId);
         this.assignedTo = assignedTo;
     }
 }

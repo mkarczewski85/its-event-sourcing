@@ -1,7 +1,6 @@
 package com.karczewski.its.es.core.service;
 
 import com.karczewski.its.es.core.domain.aggregate.Aggregate;
-import com.karczewski.its.es.core.domain.aggregate.AggregateTypeMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -13,11 +12,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AggregateFactory {
 
-    private final AggregateTypeMapper aggregateTypeMapper;
+    private final AggregateClassResolver aggregateClassResolver;
 
     @SuppressWarnings("unchecked")
     public <T extends Aggregate> T newInstance(String aggregateType, UUID aggregateId) {
-        Class<? extends Aggregate> aggregateClass = aggregateTypeMapper.getClassByAggregateType(aggregateType);
+        Class<? extends Aggregate> aggregateClass = aggregateClassResolver.getAggregateClass(aggregateType);
         try {
             Constructor<? extends Aggregate> constructor = aggregateClass.getDeclaredConstructor(UUID.class, int.class);
             return (T) constructor.newInstance(aggregateId, 0);

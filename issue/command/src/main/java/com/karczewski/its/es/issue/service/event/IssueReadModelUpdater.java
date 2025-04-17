@@ -1,14 +1,13 @@
 package com.karczewski.its.es.issue.service.event;
 
-import com.karczewski.its.es.issue.domain.aggregate.AggregateType;
-import com.karczewski.its.es.issue.domain.aggregate.IssueAggregate;
-import com.karczewski.its.es.issue.domain.event.EventType;
-import com.karczewski.its.es.issue.domain.event.IssueCommentedEvent;
-import com.karczewski.its.es.issue.service.utility.CastingUtility;
 import com.karczewski.its.es.core.domain.aggregate.Aggregate;
 import com.karczewski.its.es.core.domain.event.Event;
 import com.karczewski.its.es.core.domain.event.EventWithId;
 import com.karczewski.its.es.core.service.event.SyncEventHandler;
+import com.karczewski.its.es.issue.domain.aggregate.IssueAggregate;
+import com.karczewski.its.es.issue.domain.event.EventType;
+import com.karczewski.its.es.issue.domain.event.IssueCommentedEvent;
+import com.karczewski.its.es.issue.service.utility.CastingUtility;
 import com.karczewski.its.query.IssueProjectionUpdateClient;
 import com.karczewski.its.query.model.IssueCommentModel;
 import com.karczewski.its.query.model.IssueProjectionUpdateModel;
@@ -42,7 +41,7 @@ public class IssueReadModelUpdater implements SyncEventHandler {
     @Nonnull
     @Override
     public String getAggregateType() {
-        return AggregateType.ISSUE.toString();
+        return IssueAggregate.AGGREGATE_TYPE_NAME;
     }
 
     private static IssueProjectionUpdateModel mapToModel(IssueAggregate aggregate) {

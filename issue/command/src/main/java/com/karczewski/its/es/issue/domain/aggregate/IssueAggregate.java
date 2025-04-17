@@ -15,6 +15,8 @@ import java.util.UUID;
 @Getter
 public class IssueAggregate extends Aggregate {
 
+    public static final String AGGREGATE_TYPE_NAME = "ISSUE";
+
     private IssueTitle issueTitle;
     private IssueDescription issueDescription;
     private IssueStatus issueStatus;
@@ -249,7 +251,7 @@ public class IssueAggregate extends Aggregate {
     @Nonnull
     @Override
     public String getAggregateType() {
-        return AggregateType.getByAggregateClass(getClass()).toString();
+        return AGGREGATE_TYPE_NAME;
     }
 
 }
