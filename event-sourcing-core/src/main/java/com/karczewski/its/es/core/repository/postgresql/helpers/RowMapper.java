@@ -3,10 +3,10 @@ package com.karczewski.its.es.core.repository.postgresql.helpers;
 import com.karczewski.its.es.core.domain.aggregate.Aggregate;
 import com.karczewski.its.es.core.domain.event.Event;
 import com.karczewski.its.es.core.domain.event.EventSubscriptionCheckpoint;
-import com.karczewski.its.es.core.domain.event.EventTypeMapper;
 import com.karczewski.its.es.core.domain.event.EventWithId;
 import com.karczewski.its.es.core.repository.postgresql.constants.ColumnNames;
 import com.karczewski.its.es.core.service.AggregateClassResolver;
+import com.karczewski.its.es.core.service.EventClassResolver;
 import lombok.RequiredArgsConstructor;
 import org.postgresql.util.PGobject;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ import java.sql.SQLException;
 public final class RowMapper {
 
     private final JsonMapper jsonMapper;
-    private final EventTypeMapper eventTypeMapper;
+    private final EventClassResolver eventClassResolver;
     private final AggregateClassResolver aggregateClassResolver;
 
     public Aggregate mapToAggregate(ResultSet resultSet, int rowNum) throws SQLException {
@@ -38,7 +38,7 @@ public final class RowMapper {
         String eventType = resultSet.getString(ColumnNames.EVENT_TYPE_COLUMN);
         PGobject jsonObj = (PGobject) resultSet.getObject(ColumnNames.JSON_DATA_COLUMN);
         String json = jsonObj.getValue();
-        Class<? extends Event> eventClass = eventTypeMapper.getClassByEventType(eventType);
+        Class<? extends Event> eventClass = eventClassResolver.getClassByEventType(eventType);
         Event event = jsonMapper.fromJson(json, eventClass);
         return new EventWithId<>(id, new BigInteger(transactionId), (T) event);
     }
